@@ -4,9 +4,10 @@ import heroImage from "@/assets/hero-burger.jpg";
 
 interface HeroSectionProps {
   onOrderClick: () => void;
+  onViewMenu: () => void;
 }
 
-export const HeroSection = ({ onOrderClick }: HeroSectionProps) => {
+export const HeroSection = ({ onOrderClick, onViewMenu }: HeroSectionProps) => {
   return (
     <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
       {/* Background Image with Overlay */}
@@ -44,12 +45,15 @@ export const HeroSection = ({ onOrderClick }: HeroSectionProps) => {
             <Button
               onClick={onOrderClick}
               className="btn-hero text-lg px-8 py-4"
+              aria-label="Fazer pedido agora"
             >
               Fazer Pedido Agora
             </Button>
             <Button
               variant="outline"
+              onClick={onViewMenu}
               className="border-2 border-white text-white hover:bg-white hover:text-black font-semibold px-8 py-4 text-lg transition-all duration-300"
+              aria-label="Ver cardápio completo"
             >
               Ver Cardápio Completo
             </Button>
@@ -77,7 +81,7 @@ export const HeroSection = ({ onOrderClick }: HeroSectionProps) => {
       </div>
 
       {/* Animated scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce" aria-hidden="true">
         <div className="w-6 h-10 border-2 border-secondary rounded-full flex justify-center">
           <div className="w-1 h-3 bg-secondary rounded-full mt-2 animate-pulse"></div>
         </div>

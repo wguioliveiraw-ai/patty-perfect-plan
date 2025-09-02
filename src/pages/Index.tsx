@@ -16,36 +16,49 @@ const Index = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [customizationItem, setCustomizationItem] = useState<MenuItem | null>(null);
 
-  // Helper function to generate unique cart item ID
-  const generateCartItemId = (item: MenuItem, customizations: Customization[] = []) => {
-    const customizationString = customizations
-      .map(c => `${c.id}:${c.name}`)
-      .sort()
-      .join('|');
-    return `${item.id}-${customizationString}`;
+  // Base item para "Montar seu lanche"
+  const buildYourBurgerItem: MenuItem = {
+    id: "builder-base",
+    name: "Monte Seu Smash",
+    description: "Escolha pão, proteína, queijo e extras do seu jeito",
+    price: 24.9,
+    image: "/placeholder.svg",
+    category: "burgers",
+    isCustomizable: true,
+    ingredients: [],
+    preparationTime: 15,
   };
 
-  // Add item to cart (simple version)
+  // Scroll até o cardápio
+  const scrollToMenu = useCallback(() => {
+    const el = document.getElementById("menu");
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
+
+  // Abrir fluxo de personalização
+  const handleStartBuilder = useCallback(() => {
+    setCustomizationItem(buildYourBurgerItem);
+  }, []);
+
+  // Add item ao carrinho (simples)
   const handleAddToCart = useCallback((item: MenuItem) => {
     const existingItemIndex = cartItems.findIndex(
-      cartItem => cartItem.id === item.id && !cartItem.customizations?.length
+      (cartItem) => cartItem.id === item.id && !cartItem.customizations?.length
     );
 
     if (existingItemIndex >= 0) {
-      // Update quantity of existing item
       const updatedItems = [...cartItems];
       updatedItems[existingItemIndex].quantity += 1;
-      updatedItems[existingItemIndex].totalPrice = 
+      updatedItems[existingItemIndex].totalPrice =
         updatedItems[existingItemIndex].price * updatedItems[existingItemIndex].quantity;
       setCartItems(updatedItems);
     } else {
-      // Add new item
       const cartItem: CartItem = {
         ...item,
         quantity: 1,
         totalPrice: item.price,
       };
-      setCartItems(prev => [...prev, cartItem]);
+      setCartItems((prev) => [...prev, cartItem]);
     }
 
     toast({
@@ -54,10 +67,10 @@ const Index = () => {
     });
   }, [cartItems]);
 
-  // Add item to cart with customizations
+  // Add item personalizado ao carrinho
   const handleAddCustomizedToCart = useCallback((
-    item: MenuItem, 
-    customizations: Customization[], 
+    item: MenuItem,
+    customizations: Customization[],
     quantity: number
   ) => {
     const customizationPrice = customizations.reduce((sum, c) => sum + c.price, 0);
@@ -70,17 +83,17 @@ const Index = () => {
       totalPrice: totalItemPrice,
     };
 
-    setCartItems(prev => [...prev, cartItem]);
+    setCartItems((prev) => [...prev, cartItem]);
   }, []);
 
-  // Update item quantity in cart
+  // Atualiza quantidade
   const handleUpdateQuantity = useCallback((itemId: string, newQuantity: number) => {
     if (newQuantity <= 0) {
       handleRemoveFromCart(itemId);
       return;
     }
 
-    setCartItems(prev => prev.map(item => {
+    setCartItems((prev) => prev.map((item) => {
       if (item.id === itemId) {
         const pricePerUnit = item.totalPrice / item.quantity;
         return {
@@ -93,22 +106,20 @@ const Index = () => {
     }));
   }, []);
 
-  // Remove item from cart
+  // Remove item
   const handleRemoveFromCart = useCallback((itemId: string) => {
-    setCartItems(prev => prev.filter(item => item.id !== itemId));
+    setCartItems((prev) => prev.filter((item) => item.id !== itemId));
   }, []);
 
-  // Open customization modal
+  // Modal de customização
   const handleCustomizeItem = useCallback((item: MenuItem) => {
     setCustomizationItem(item);
   }, []);
-
-  // Close customization modal
   const handleCloseCustomization = useCallback(() => {
     setCustomizationItem(null);
   }, []);
 
-  // Handle order button click
+  // Pedir agora
   const handleOrderClick = useCallback(() => {
     if (cartItems.length === 0) {
       toast({
@@ -121,36 +132,28 @@ const Index = () => {
     setIsCartOpen(true);
   }, [cartItems.length]);
 
-  // Handle checkout
+  // Checkout
   const handleCheckout = useCallback(() => {
     setCurrentState("checkout");
     setIsCartOpen(false);
   }, []);
 
-  // Handle order completion
+  // Finalização
   const handleOrderComplete = useCallback((deliveryInfo: DeliveryInfo) => {
-    // Here you would typically send the order to your backend
     console.log("Order completed:", { cartItems, deliveryInfo });
-    
-    // Clear cart and show success
     setCartItems([]);
     setCurrentState("orderComplete");
-    
     toast({
       title: "Pedido realizado com sucesso!",
       description: `Entrega prevista em ${deliveryInfo.estimatedTime} minutos`,
     });
-
-    // Redirect back to menu after 3 seconds
     setTimeout(() => {
       setCurrentState("menu");
     }, 3000);
   }, [cartItems]);
 
-  // Calculate cart items count
   const cartItemsCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
-  // Render different states
   if (currentState === "checkout") {
     return (
       <DeliveryForm
@@ -192,23 +195,23 @@ const Index = () => {
     );
   }
 
-  // Main menu state
   return (
     <div className="min-h-screen bg-background">
       <Header
         cartItemsCount={cartItemsCount}
         onCartOpen={() => setIsCartOpen(true)}
+        onViewMenu={scrollToMenu}
+        onBuildBurger={handleStartBuilder}
       />
       
       <main>
-        <HeroSection onOrderClick={handleOrderClick} />
+        <HeroSection onOrderClick={handleOrderClick} onViewMenu={scrollToMenu} />
         <MenuSection
           onAddToCart={handleAddToCart}
           onCustomizeItem={handleCustomizeItem}
         />
       </main>
 
-      {/* Cart Sidebar */}
       <Cart
         items={cartItems}
         isOpen={isCartOpen}
@@ -218,7 +221,6 @@ const Index = () => {
         onCheckout={handleCheckout}
       />
 
-      {/* Customization Modal */}
       <CustomizationModal
         item={customizationItem}
         isOpen={!!customizationItem}
@@ -226,7 +228,6 @@ const Index = () => {
         onAddToCart={handleAddCustomizedToCart}
       />
 
-      {/* Footer */}
       <footer className="bg-primary text-primary-foreground py-12">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

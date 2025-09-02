@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CartItem } from "@/types/menu";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
 import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
@@ -50,7 +50,7 @@ export const Cart = ({
   };
 
   return (
-    <Sheet open={isOpen} onOpenChange={onClose}>
+    <Sheet open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
       <SheetContent className="w-full sm:max-w-lg">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
@@ -79,6 +79,7 @@ export const Cart = ({
                         src={item.image}
                         alt={item.name}
                         className="w-16 h-16 rounded-lg object-cover"
+                        onError={(e) => { (e.currentTarget as HTMLImageElement).src = "/placeholder.svg"; }}
                       />
                       
                       <div className="flex-1 min-w-0">

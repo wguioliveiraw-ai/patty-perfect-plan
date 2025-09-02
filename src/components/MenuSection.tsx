@@ -28,7 +28,7 @@ export const MenuSection = ({ onAddToCart, onCustomizeItem }: MenuSectionProps) 
   const formatPrice = (price: number) => `R$ ${price.toFixed(2).replace('.', ',')}`;
 
   return (
-    <section className="py-16 bg-background">
+    <section id="menu" className="py-16 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -62,6 +62,7 @@ export const MenuSection = ({ onAddToCart, onCustomizeItem }: MenuSectionProps) 
                   src={item.image}
                   alt={item.name}
                   className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).src = "/placeholder.svg"; }}
                 />
                 {item.category === "burgers" && item.ingredients?.includes("Hambúrguer vegetal") && (
                   <Badge className="absolute top-3 left-3 bg-green-500 text-white">
@@ -95,6 +96,7 @@ export const MenuSection = ({ onAddToCart, onCustomizeItem }: MenuSectionProps) 
                   <Button
                     onClick={() => onAddToCart(item)}
                     className="flex-1 btn-hero"
+                    aria-label={`Adicionar ${item.name} ao carrinho`}
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     Adicionar
@@ -105,6 +107,7 @@ export const MenuSection = ({ onAddToCart, onCustomizeItem }: MenuSectionProps) 
                       variant="outline"
                       onClick={() => onCustomizeItem(item)}
                       className="btn-outline-yellow px-4"
+                      aria-label={`Personalizar ${item.name}`}
                     >
                       Personalizar
                     </Button>
