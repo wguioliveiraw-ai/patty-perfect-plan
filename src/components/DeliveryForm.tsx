@@ -1,0 +1,254 @@
+import { useState } from "react";
+import { CartItem, DeliveryInfo } from "@/types/menu";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { MapPin, Phone, CreditCard, Clock, CheckCircle } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
+
+interface DeliveryFormProps {
+  cartItems: CartItem[];
+  onOrderComplete: (deliveryInfo: DeliveryInfo) => void;
+  onBack: () => void;
+}
+
+export const DeliveryForm = ({ cartItems, onOrderComplete, onBack }: DeliveryFormProps) => {
+  const [address, setAddress] = useState("");
+  const [phone, setPhone] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<"credit" | "debit" | "pix" | "cash">("pix");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const subtotal = cartItems.reduce((sum, item) => sum + item.totalPrice, 0);
+  const deliveryFee = subtotal >= 35 ? 0 : 8.90;
+  const total = subtotal + deliveryFee;
+  const estimatedTime = Math.max(...cartItems.map(item => item.preparationTime || 15)) + 20;
+
+  const formatPrice = (price: number) => `R$ ${price.toFixed(2).replace('.', ',')}`;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!address.trim() || !phone.trim()) {
+      toast({
+        title: "Campos obrigatórios",
+        description: "Por favor, preencha todos os campos obrigatórios",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    // Simulate order processing
+    setTimeout(() => {
+      const deliveryInfo: DeliveryInfo = {
+        address: address.trim(),
+        phone: phone.trim(),
+        paymentMethod,
+        estimatedTime,
+        deliveryFee,
+      };
+
+      onOrderComplete(deliveryInfo);
+      
+      toast({
+        title: "Pedido confirmado!",
+        description: `Seu pedido será entregue em ${estimatedTime} minutos`,
+      });
+      
+      setIsSubmitting(false);
+    }, 2000);
+  };
+
+  return (
+    <div className="min-h-screen bg-background py-8">
+      <div className="container mx-auto px-4 max-w-4xl">
+        <div className="mb-8">
+          <Button
+            variant="outline"
+            onClick={onBack}
+            className="mb-4"
+          >
+            ← Voltar ao Carrinho
+          </Button>
+          <h1 className="text-3xl font-bold">
+            Finalizar <span className="text-secondary">Pedido</span>
+          </h1>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Delivery Form */}
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MapPin className="w-5 h-5" />
+                  Endereço de Entrega
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div>
+                    <Label htmlFor="address">Endereço completo *</Label>
+                    <Input
+                      id="address"
+                      placeholder="Rua, número, bairro, CEP"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      required
+                      className="mt-1"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="phone">Telefone/WhatsApp *</Label>
+                    <Input
+                      id="phone"
+                      placeholder="(11) 99999-9999"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      required
+                      className="mt-1"
+                    />
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <CreditCard className="w-5 h-5" />
+                  Forma de Pagamento
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <RadioGroup value={paymentMethod} onValueChange={(value: any) => setPaymentMethod(value)}>
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-2 border rounded-lg p-3 hover:bg-muted/50">
+                      <RadioGroupItem value="pix" id="pix" />
+                      <Label htmlFor="pix" className="flex-1 cursor-pointer flex justify-between">
+                        <span>PIX</span>
+                        <span className="text-green-600 text-sm">Desconto de 5%</span>
+                      </Label>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2 border rounded-lg p-3 hover:bg-muted/50">
+                      <RadioGroupItem value="credit" id="credit" />
+                      <Label htmlFor="credit" className="flex-1 cursor-pointer">
+                        Cartão de Crédito
+                      </Label>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2 border rounded-lg p-3 hover:bg-muted/50">
+                      <RadioGroupItem value="debit" id="debit" />
+                      <Label htmlFor="debit" className="flex-1 cursor-pointer">
+                        Cartão de Débito
+                      </Label>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2 border rounded-lg p-3 hover:bg-muted/50">
+                      <RadioGroupItem value="cash" id="cash" />
+                      <Label htmlFor="cash" className="flex-1 cursor-pointer">
+                        Dinheiro na Entrega
+                      </Label>
+                    </div>
+                  </div>
+                </RadioGroup>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Order Summary */}
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Resumo do Pedido</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {cartItems.map((item, index) => (
+                  <div key={index} className="flex justify-between items-start gap-3">
+                    <div className="flex-1">
+                      <h4 className="font-medium">{item.name}</h4>
+                      {item.customizations && item.customizations.length > 0 && (
+                        <p className="text-sm text-muted-foreground">
+                          {item.customizations.map(c => c.name).join(", ")}
+                        </p>
+                      )}
+                      <p className="text-sm text-muted-foreground">
+                        Qtd: {item.quantity}
+                      </p>
+                    </div>
+                    <span className="font-medium">{formatPrice(item.totalPrice)}</span>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="pt-6">
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span>Subtotal</span>
+                    <span>{formatPrice(subtotal)}</span>
+                  </div>
+                  
+                  <div className="flex justify-between">
+                    <span>Taxa de entrega</span>
+                    <span className={deliveryFee === 0 ? "text-green-600" : ""}>
+                      {deliveryFee === 0 ? "GRÁTIS" : formatPrice(deliveryFee)}
+                    </span>
+                  </div>
+                  
+                  {paymentMethod === "pix" && (
+                    <div className="flex justify-between text-green-600">
+                      <span>Desconto PIX (5%)</span>
+                      <span>-{formatPrice(total * 0.05)}</span>
+                    </div>
+                  )}
+                  
+                  <Separator />
+                  
+                  <div className="flex justify-between font-bold text-lg">
+                    <span>Total</span>
+                    <span className="text-secondary">
+                      {formatPrice(paymentMethod === "pix" ? total * 0.95 : total)}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="mt-6 p-4 bg-muted rounded-lg">
+                  <div className="flex items-center gap-2 text-sm">
+                    <Clock className="w-4 h-4" />
+                    <span className="font-medium">Tempo estimado: {estimatedTime} minutos</span>
+                  </div>
+                </div>
+
+                <Button
+                  onClick={handleSubmit}
+                  disabled={isSubmitting || !address.trim() || !phone.trim()}
+                  className="w-full btn-hero text-lg py-6 mt-6"
+                >
+                  {isSubmitting ? (
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                      Processando...
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5" />
+                      Confirmar Pedido
+                    </div>
+                  )}
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

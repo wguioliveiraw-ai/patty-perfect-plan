@@ -52,16 +52,23 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				sidebar: {
-					DEFAULT: 'hsl(var(--sidebar-background))',
-					foreground: 'hsl(var(--sidebar-foreground))',
-					primary: 'hsl(var(--sidebar-primary))',
-					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
-					accent: 'hsl(var(--sidebar-accent))',
-					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
-					border: 'hsl(var(--sidebar-border))',
-					ring: 'hsl(var(--sidebar-ring))'
+				// Custom Smash Point colors
+				yellow: {
+					primary: 'hsl(var(--yellow-primary))',
+					hover: 'hsl(var(--yellow-hover))',
+					light: 'hsl(var(--yellow-light))'
+				},
+				black: {
+					primary: 'hsl(var(--black-primary))',
+					secondary: 'hsl(var(--black-secondary))'
+				},
+				gray: {
+					light: 'hsl(var(--gray-light))',
+					medium: 'hsl(var(--gray-medium))'
 				}
+			},
+			fontFamily: {
+				poppins: ['Poppins', 'sans-serif']
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
