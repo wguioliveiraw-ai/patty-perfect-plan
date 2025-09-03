@@ -1,22 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { Clock, Truck, Star } from "lucide-react";
 import heroImage from "@/assets/hero-burger.jpg";
-
 interface HeroSectionProps {
   onOrderClick: () => void;
   onViewMenu: () => void;
 }
-
-export const HeroSection = ({ onOrderClick, onViewMenu }: HeroSectionProps) => {
-  return (
-    <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
+export const HeroSection = ({
+  onOrderClick,
+  onViewMenu
+}: HeroSectionProps) => {
+  return <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
       {/* Background Image with Overlay */}
       <div className="absolute inset-0">
-        <img
-          src={heroImage}
-          alt="Delicious gourmet burgers"
-          className="w-full h-full object-cover"
-        />
+        <img src={heroImage} alt="Delicious gourmet burgers" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-hero"></div>
       </div>
 
@@ -36,25 +32,14 @@ export const HeroSection = ({ onOrderClick, onViewMenu }: HeroSectionProps) => {
           </h1>
 
           {/* Subtitle */}
-          <p className="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl mx-auto">
-            Monte seu lanche perfeito com ingredientes premium e receba em casa com delivery ultra rápido
-          </p>
+          <p className="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl mx-auto">Monte seu lanche perfeito com ingredientes premium e receba no conforto da sua casa!</p>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button
-              onClick={onOrderClick}
-              className="btn-hero text-lg px-8 py-4"
-              aria-label="Fazer pedido agora"
-            >
+            <Button onClick={onOrderClick} className="btn-hero text-lg px-8 py-4" aria-label="Fazer pedido agora">
               Fazer Pedido Agora
             </Button>
-            <Button
-              variant="outline"
-              onClick={onViewMenu}
-              className="border-2 border-white text-white hover:bg-white hover:text-black font-semibold px-8 py-4 text-lg transition-all duration-300"
-              aria-label="Ver cardápio completo"
-            >
+            <Button variant="outline" onClick={onViewMenu} className="border-2 border-white text-white hover:bg-white hover:text-black font-semibold px-8 py-4 text-lg transition-all duration-300" aria-label="Ver cardápio completo">
               Ver Cardápio Completo
             </Button>
           </div>
@@ -82,10 +67,7 @@ export const HeroSection = ({ onOrderClick, onViewMenu }: HeroSectionProps) => {
 
       {/* Animated scroll indicator */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce" aria-hidden="true">
-        <div className="w-6 h-10 border-2 border-secondary rounded-full flex justify-center">
-          <div className="w-1 h-3 bg-secondary rounded-full mt-2 animate-pulse"></div>
-        </div>
+        
       </div>
-    </section>
-  );
+    </section>;
 };

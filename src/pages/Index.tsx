@@ -182,31 +182,27 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <div className="flex items-center space-x-2 mb-4">
-                <div className="w-8 h-8 bg-secondary rounded-lg flex items-center justify-center font-bold text-secondary-foreground">
-                  SP
-                </div>
-                <span className="text-xl font-bold">Smash Point</span>
+                <div className="w-8 h-8 bg-secondary rounded-lg flex items-center justify-center font-bold text-secondary-foreground">FH</div>
+                <span className="text-xl font-bold">Food House Hamburgueria</span>
               </div>
-              <p className="text-primary-foreground/80">
-                Hambúrgueres artesanais com ingredientes premium e delivery ultra rápido.
-              </p>
+              <p className="text-inherit">Carne artesanal & Recheado sem dó</p>
             </div>
             
             <div>
               <h3 className="font-semibold mb-4">Contato</h3>
               <div className="space-y-2 text-primary-foreground/80">
                 <p>📞 (14) 3621-5951</p>
-                <p>📧 contato@smashpoint.com</p>
-                <p>📍 São Paulo, SP</p>
+                <p>📧 contato@foodhouse.com</p>
+                <p>📍 Jau, SP</p>
               </div>
             </div>
             
             <div>
               <h3 className="font-semibold mb-4">Horário</h3>
               <div className="space-y-2 text-primary-foreground/80">
-                <p>Segunda a Sexta: 18h - 00h</p>
-                <p>Sábado e Domingo: 18h - 01h</p>
-                <p>🚚 Delivery em 25-35 min</p>
+                <p>Quinta a Domingo: 18:30h - 22h</p>
+                
+                <p>🚚 Delivery em 30-40 min</p>
               </div>
             </div>
           </div>
