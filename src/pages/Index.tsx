@@ -7,9 +7,7 @@ import { Cart } from "@/components/Cart";
 import { CustomizationModal } from "@/components/CustomizationModal";
 import { DeliveryForm } from "@/components/DeliveryForm";
 import { toast } from "@/hooks/use-toast";
-
 type AppState = "menu" | "checkout" | "orderComplete";
-
 const Index = () => {
   const [currentState, setCurrentState] = useState<AppState>("menu");
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -26,13 +24,16 @@ const Index = () => {
     category: "burgers",
     isCustomizable: true,
     ingredients: [],
-    preparationTime: 15,
+    preparationTime: 15
   };
 
   // Scroll até o cardápio
   const scrollToMenu = useCallback(() => {
     const el = document.getElementById("menu");
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (el) el.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
   }, []);
 
   // Abrir fluxo de personalização
@@ -42,48 +43,37 @@ const Index = () => {
 
   // Add item ao carrinho (simples)
   const handleAddToCart = useCallback((item: MenuItem) => {
-    const existingItemIndex = cartItems.findIndex(
-      (cartItem) => cartItem.id === item.id && !cartItem.customizations?.length
-    );
-
+    const existingItemIndex = cartItems.findIndex(cartItem => cartItem.id === item.id && !cartItem.customizations?.length);
     if (existingItemIndex >= 0) {
       const updatedItems = [...cartItems];
       updatedItems[existingItemIndex].quantity += 1;
-      updatedItems[existingItemIndex].totalPrice =
-        updatedItems[existingItemIndex].price * updatedItems[existingItemIndex].quantity;
+      updatedItems[existingItemIndex].totalPrice = updatedItems[existingItemIndex].price * updatedItems[existingItemIndex].quantity;
       setCartItems(updatedItems);
     } else {
       const cartItem: CartItem = {
         ...item,
         quantity: 1,
-        totalPrice: item.price,
+        totalPrice: item.price
       };
-      setCartItems((prev) => [...prev, cartItem]);
+      setCartItems(prev => [...prev, cartItem]);
     }
-
     toast({
       title: "Item adicionado!",
-      description: `${item.name} foi adicionado ao carrinho`,
+      description: `${item.name} foi adicionado ao carrinho`
     });
   }, [cartItems]);
 
   // Add item personalizado ao carrinho
-  const handleAddCustomizedToCart = useCallback((
-    item: MenuItem,
-    customizations: Customization[],
-    quantity: number
-  ) => {
+  const handleAddCustomizedToCart = useCallback((item: MenuItem, customizations: Customization[], quantity: number) => {
     const customizationPrice = customizations.reduce((sum, c) => sum + c.price, 0);
     const totalItemPrice = (item.price + customizationPrice) * quantity;
-
     const cartItem: CartItem = {
       ...item,
       quantity,
       customizations,
-      totalPrice: totalItemPrice,
+      totalPrice: totalItemPrice
     };
-
-    setCartItems((prev) => [...prev, cartItem]);
+    setCartItems(prev => [...prev, cartItem]);
   }, []);
 
   // Atualiza quantidade
@@ -92,14 +82,13 @@ const Index = () => {
       handleRemoveFromCart(itemId);
       return;
     }
-
-    setCartItems((prev) => prev.map((item) => {
+    setCartItems(prev => prev.map(item => {
       if (item.id === itemId) {
         const pricePerUnit = item.totalPrice / item.quantity;
         return {
           ...item,
           quantity: newQuantity,
-          totalPrice: pricePerUnit * newQuantity,
+          totalPrice: pricePerUnit * newQuantity
         };
       }
       return item;
@@ -108,7 +97,7 @@ const Index = () => {
 
   // Remove item
   const handleRemoveFromCart = useCallback((itemId: string) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== itemId));
+    setCartItems(prev => prev.filter(item => item.id !== itemId));
   }, []);
 
   // Modal de customização
@@ -125,7 +114,7 @@ const Index = () => {
       toast({
         title: "Carrinho vazio",
         description: "Adicione itens ao carrinho antes de fazer o pedido",
-        variant: "destructive",
+        variant: "destructive"
       });
       return;
     }
@@ -140,47 +129,30 @@ const Index = () => {
 
   // Finalização
   const handleOrderComplete = useCallback((deliveryInfo: DeliveryInfo) => {
-    console.log("Order completed:", { cartItems, deliveryInfo });
+    console.log("Order completed:", {
+      cartItems,
+      deliveryInfo
+    });
     setCartItems([]);
     setCurrentState("orderComplete");
     toast({
       title: "Pedido realizado com sucesso!",
-      description: `Entrega prevista em ${deliveryInfo.estimatedTime} minutos`,
+      description: `Entrega prevista em ${deliveryInfo.estimatedTime} minutos`
     });
     setTimeout(() => {
       setCurrentState("menu");
     }, 3000);
   }, [cartItems]);
-
   const cartItemsCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-
   if (currentState === "checkout") {
-    return (
-      <DeliveryForm
-        cartItems={cartItems}
-        onOrderComplete={handleOrderComplete}
-        onBack={() => setCurrentState("menu")}
-      />
-    );
+    return <DeliveryForm cartItems={cartItems} onOrderComplete={handleOrderComplete} onBack={() => setCurrentState("menu")} />;
   }
-
   if (currentState === "orderComplete") {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+    return <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <div className="w-20 h-20 bg-secondary rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg
-              className="w-10 h-10 text-secondary-foreground"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M5 13l4 4L19 7"
-              />
+            <svg className="w-10 h-10 text-secondary-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
           <h1 className="text-3xl font-bold mb-4">Pedido Confirmado!</h1>
@@ -191,42 +163,19 @@ const Index = () => {
             Redirecionando para o cardápio...
           </div>
         </div>
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <div className="min-h-screen bg-background">
-      <Header
-        cartItemsCount={cartItemsCount}
-        onCartOpen={() => setIsCartOpen(true)}
-        onViewMenu={scrollToMenu}
-        onBuildBurger={handleStartBuilder}
-      />
+  return <div className="min-h-screen bg-background">
+      <Header cartItemsCount={cartItemsCount} onCartOpen={() => setIsCartOpen(true)} onViewMenu={scrollToMenu} onBuildBurger={handleStartBuilder} />
       
       <main>
         <HeroSection onOrderClick={handleOrderClick} onViewMenu={scrollToMenu} />
-        <MenuSection
-          onAddToCart={handleAddToCart}
-          onCustomizeItem={handleCustomizeItem}
-        />
+        <MenuSection onAddToCart={handleAddToCart} onCustomizeItem={handleCustomizeItem} />
       </main>
 
-      <Cart
-        items={cartItems}
-        isOpen={isCartOpen}
-        onClose={() => setIsCartOpen(false)}
-        onUpdateQuantity={handleUpdateQuantity}
-        onRemoveItem={handleRemoveFromCart}
-        onCheckout={handleCheckout}
-      />
+      <Cart items={cartItems} isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} onUpdateQuantity={handleUpdateQuantity} onRemoveItem={handleRemoveFromCart} onCheckout={handleCheckout} />
 
-      <CustomizationModal
-        item={customizationItem}
-        isOpen={!!customizationItem}
-        onClose={handleCloseCustomization}
-        onAddToCart={handleAddCustomizedToCart}
-      />
+      <CustomizationModal item={customizationItem} isOpen={!!customizationItem} onClose={handleCloseCustomization} onAddToCart={handleAddCustomizedToCart} />
 
       <footer className="bg-primary text-primary-foreground py-12">
         <div className="container mx-auto px-4">
@@ -246,7 +195,7 @@ const Index = () => {
             <div>
               <h3 className="font-semibold mb-4">Contato</h3>
               <div className="space-y-2 text-primary-foreground/80">
-                <p>📞 (11) 99999-9999</p>
+                <p>📞 (14) 3621-5951</p>
                 <p>📧 contato@smashpoint.com</p>
                 <p>📍 São Paulo, SP</p>
               </div>
@@ -267,8 +216,6 @@ const Index = () => {
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
