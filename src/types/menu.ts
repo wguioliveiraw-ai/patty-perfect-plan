@@ -25,11 +25,14 @@ export interface Customization {
 }
 
 export type MenuCategory = 
-  | 'burgers'
+  | 'beef-burgers'
+  | 'chicken-burgers'
+  | 'vegan-burgers'
   | 'sides'
   | 'drinks'
   | 'desserts'
-  | 'combos';
+  | 'combos'
+  | 'sauces';
 
 export interface DeliveryInfo {
   address: string;

@@ -21,7 +21,7 @@ const Index = () => {
     description: "Escolha pão, proteína, queijo e extras do seu jeito",
     price: 24.9,
     image: "/placeholder.svg",
-    category: "burgers",
+    category: "beef-burgers",
     isCustomizable: true,
     ingredients: [],
     preparationTime: 15

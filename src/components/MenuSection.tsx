@@ -10,17 +10,20 @@ interface MenuSectionProps {
   onCustomizeItem: (item: MenuItem) => void;
 }
 const categoryNames: Record<MenuCategory, string> = {
-  burgers: "Hambúrgueres",
+  "beef-burgers": "Hambúrgueres de Carne",
+  "chicken-burgers": "Hambúrgueres de Frango",
+  "vegan-burgers": "Hambúrgueres Veganos",
   sides: "Acompanhamentos",
   drinks: "Bebidas",
   desserts: "Sobremesas",
-  combos: "Combos"
+  combos: "Combos",
+  sauces: "Molhos"
 };
 export const MenuSection = ({
   onAddToCart,
   onCustomizeItem
 }: MenuSectionProps) => {
-  const [selectedCategory, setSelectedCategory] = useState<MenuCategory>("burgers");
+  const [selectedCategory, setSelectedCategory] = useState<MenuCategory>("beef-burgers");
   const categories = Object.keys(categoryNames) as MenuCategory[];
   const filteredItems = menuItems.filter(item => item.category === selectedCategory);
   const formatPrice = (price: number) => `R$ ${price.toFixed(2).replace('.', ',')}`;
@@ -47,7 +50,7 @@ export const MenuSection = ({
                 <img src={item.image} alt={item.name} className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300" onError={e => {
               (e.currentTarget as HTMLImageElement).src = "/placeholder.svg";
             }} />
-                {item.category === "burgers" && item.ingredients?.includes("Hambúrguer vegetal") && <Badge className="absolute top-3 left-3 bg-green-500 text-white">
+                {item.category === "vegan-burgers" && <Badge className="absolute top-3 left-3 bg-green-500 text-white">
                     <Leaf className="w-3 h-3 mr-1" />
                     Vegano
                   </Badge>}
