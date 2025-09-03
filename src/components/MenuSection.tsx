@@ -54,10 +54,9 @@ export const MenuSection = ({
                     <Leaf className="w-3 h-3 mr-1" />
                     Vegano
                   </Badge>}
-                {item.preparationTime && <div className="absolute top-3 right-3 bg-black/70 text-white px-2 py-1 rounded-full text-xs flex items-center">
-                    <Clock className="w-3 h-3 mr-1" />
-                    {item.preparationTime}min
-                  </div>}
+                <div className="absolute top-3 right-3 bg-black/70 text-white px-2 py-1 rounded-full text-xs">
+                  {formatPrice(item.price)}
+                </div>
               </div>
               
               <CardContent className="p-6">
@@ -65,7 +64,7 @@ export const MenuSection = ({
                   <h3 className="text-xl font-semibold text-foreground group-hover:text-secondary transition-colors">
                     {item.name}
                   </h3>
-                  <span className="text-2xl font-bold text-secondary">
+                  <span className="text-lg font-bold text-secondary ml-2 flex-shrink-0">
                     {formatPrice(item.price)}
                   </span>
                 </div>

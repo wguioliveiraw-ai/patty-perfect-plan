@@ -24,7 +24,7 @@ export const DeliveryForm = ({ cartItems, onOrderComplete, onBack }: DeliveryFor
   const subtotal = cartItems.reduce((sum, item) => sum + item.totalPrice, 0);
   const deliveryFee = subtotal >= 35 ? 0 : 8.90;
   const total = subtotal + deliveryFee;
-  const estimatedTime = Math.max(...cartItems.map(item => item.preparationTime || 15)) + 20;
+  const estimatedTime = 30; // Fixed 30 minute estimate
 
   const formatPrice = (price: number) => `R$ ${price.toFixed(2).replace('.', ',')}`;
 

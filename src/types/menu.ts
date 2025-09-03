@@ -8,7 +8,6 @@ export interface MenuItem {
   isCustomizable?: boolean;
   ingredients?: string[];
   allergens?: string[];
-  preparationTime?: number;
 }
 
 export interface CartItem extends MenuItem {

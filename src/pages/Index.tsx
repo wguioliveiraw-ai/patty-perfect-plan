@@ -24,7 +24,6 @@ const Index = () => {
     category: "beef-burgers",
     isCustomizable: true,
     ingredients: [],
-    preparationTime: 15
   };
 
   // Scroll até o cardápio
