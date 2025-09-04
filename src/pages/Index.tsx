@@ -23,7 +23,7 @@ const Index = () => {
     image: "/placeholder.svg",
     category: "burgers",
     isCustomizable: true,
-    ingredients: [],
+    ingredients: []
   };
 
   // Scroll até o cardápio
@@ -207,7 +207,7 @@ const Index = () => {
           </div>
           
           <div className="border-t border-primary-foreground/20 mt-8 pt-8 text-center text-primary-foreground/60">
-            <p>&copy; 2024 Smash Point. Todos os direitos reservados.</p>
+            <p>© 2024 Food House. Todos os direitos reservados.</p>
           </div>
         </div>
       </footer>
