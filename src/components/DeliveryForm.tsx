@@ -44,6 +44,64 @@ export const DeliveryForm = ({ cartItems, onOrderComplete, onBack }: DeliveryFor
 
     // Simulate order processing
     setTimeout(() => {
+      // Format order for WhatsApp
+      const finalTotal = paymentMethod === "pix" ? total * 0.95 : total;
+      
+      let orderMessage = "🍔 *NOVO PEDIDO - FOOD HOUSE*\n\n";
+      
+      // Items
+      orderMessage += "📋 *ITENS DO PEDIDO:*\n";
+      cartItems.forEach((item, index) => {
+        orderMessage += `${index + 1}. ${item.name}\n`;
+        if (item.customizations && item.customizations.length > 0) {
+          orderMessage += `   Extras: ${item.customizations.map(c => c.name).join(", ")}\n`;
+        }
+        orderMessage += `   Qtd: ${item.quantity} | ${formatPrice(item.totalPrice)}\n\n`;
+      });
+      
+      // Totals
+      orderMessage += "💰 *VALORES:*\n";
+      orderMessage += `Subtotal: ${formatPrice(subtotal)}\n`;
+      orderMessage += `Taxa de entrega: ${deliveryFee === 0 ? "GRÁTIS" : formatPrice(deliveryFee)}\n`;
+      if (paymentMethod === "pix") {
+        orderMessage += `Desconto PIX (5%): -${formatPrice(total * 0.05)}\n`;
+      }
+      orderMessage += `*Total: ${formatPrice(finalTotal)}*\n\n`;
+      
+      // Delivery Info
+      orderMessage += "📍 *ENDEREÇO DE ENTREGA:*\n";
+      orderMessage += `${address.trim()}\n\n`;
+      
+      orderMessage += "📞 *TELEFONE:*\n";
+      orderMessage += `${phone.trim()}\n\n`;
+      
+      // Payment Method
+      const paymentLabels = {
+        pix: "PIX",
+        credit: "Cartão de Crédito",
+        debit: "Cartão de Débito",
+        cash: "Dinheiro na Entrega"
+      };
+      orderMessage += "💳 *FORMA DE PAGAMENTO:*\n";
+      orderMessage += `${paymentLabels[paymentMethod]}\n\n`;
+      
+      orderMessage += "⏰ *Tempo estimado: 30-40 minutos*";
+      
+      // WhatsApp URL
+      const whatsappNumber = "5514981637609"; // (14) 98163-7609 in international format
+      const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(orderMessage)}`;
+      
+      // Open WhatsApp
+      window.open(whatsappUrl, '_blank');
+      
+      toast({
+        title: "Pedido enviado!",
+        description: "Você será redirecionado para o WhatsApp para confirmar seu pedido",
+      });
+      
+      setIsSubmitting(false);
+      
+      // Call onOrderComplete to handle app state
       const deliveryInfo: DeliveryInfo = {
         address: address.trim(),
         phone: phone.trim(),
@@ -51,15 +109,7 @@ export const DeliveryForm = ({ cartItems, onOrderComplete, onBack }: DeliveryFor
         estimatedTime,
         deliveryFee,
       };
-
       onOrderComplete(deliveryInfo);
-      
-      toast({
-        title: "Pedido confirmado!",
-        description: `Seu pedido será entregue em ${estimatedTime} minutos`,
-      });
-      
-      setIsSubmitting(false);
     }, 2000);
   };
 
