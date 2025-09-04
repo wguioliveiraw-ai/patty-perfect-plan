@@ -22,7 +22,7 @@ export const HeroSection = ({
           {/* Badge */}
           <div className="inline-flex items-center bg-secondary/20 backdrop-blur-sm border border-secondary/30 rounded-full px-4 py-2 mb-6">
             <Star className="w-4 h-4 text-secondary mr-2" />
-            <span className="text-sm font-medium">Hambúrgueres Artesanais Premium</span>
+            <span className="text-sm font-medium">Hamburgueria Artesanal</span>
           </div>
 
           {/* Main Title */}
