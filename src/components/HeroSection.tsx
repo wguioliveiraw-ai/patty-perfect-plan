@@ -27,8 +27,8 @@ export const HeroSection = ({
 
           {/* Main Title */}
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            Sabor que
-            <span className="text-secondary block">Transforma</span>
+            Carne artesanal &
+            <span className="text-secondary block">Recheado sem DÓ!</span>
           </h1>
 
           {/* Subtitle */}

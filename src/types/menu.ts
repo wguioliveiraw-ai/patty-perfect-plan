@@ -24,9 +24,9 @@ export interface Customization {
 }
 
 export type MenuCategory = 
-  | 'beef-burgers'
-  | 'chicken-burgers'
-  | 'vegan-burgers'
+  | 'burgers'
+  | 'burgers-2.0'
+  | 'burgers-vegetarianos'
   | 'sides'
   | 'drinks'
   | 'desserts'
