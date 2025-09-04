@@ -18,6 +18,29 @@ import loadedNachos from "@/assets/sides/loaded-nachos.jpg";
 import mozzarellaSticks from "@/assets/sides/mozzarella-sticks.jpg";
 import buffaloWings from "@/assets/sides/buffalo-wings.jpg";
 
+// Import sauce images
+import bbqSauce from "@/assets/sauces/bbq-sauce.jpg";
+import cheddarSauce from "@/assets/sauces/cheddar-sauce.jpg";
+import specialSauce from "@/assets/sauces/special-sauce.jpg";
+import guavaKetchup from "@/assets/sauces/guava-ketchup.jpg";
+
+// Import drink images
+import soda2L from "@/assets/drinks/soda-2l.jpg";
+import soda1L from "@/assets/drinks/soda-1l.jpg";
+import sodaCan from "@/assets/drinks/soda-can.jpg";
+import water from "@/assets/drinks/water.jpg";
+import heineken from "@/assets/drinks/heineken.jpg";
+import sprite from "@/assets/drinks/sprite.jpg";
+import orangeJuice from "@/assets/drinks/orange-juice.jpg";
+
+// Import dessert images
+import fudgeCake from "@/assets/desserts/fudge-cake.jpg";
+import pudding from "@/assets/desserts/pudding.jpg";
+
+// Import combo images
+import familyCombo from "@/assets/combos/family-combo.jpg";
+import coupleCombo from "@/assets/combos/couple-combo.jpg";
+
 export const menuItems: MenuItem[] = [
   // Hambúrgueres Premium 2.0
   {
@@ -371,7 +394,7 @@ export const menuItems: MenuItem[] = [
     name: "Molho Barbecue",
     description: "Pote individual de 150g",
     price: 5.00,
-    image: "/api/placeholder/300/200?text=Molho+BBQ",
+    image: bbqSauce,
     category: "sauces",
   },
   {
@@ -379,7 +402,7 @@ export const menuItems: MenuItem[] = [
     name: "Cheddar Cremoso",
     description: "Pote individual de 150g",
     price: 5.00,
-    image: "/api/placeholder/300/200?text=Cheddar",
+    image: cheddarSauce,
     category: "sauces",
   },
   {
@@ -387,7 +410,7 @@ export const menuItems: MenuItem[] = [
     name: "Molho Especial",
     description: "Pote individual de 150g",
     price: 5.00,
-    image: "/api/placeholder/300/200?text=Molho+Especial",
+    image: specialSauce,
     category: "sauces",
   },
   {
@@ -395,7 +418,7 @@ export const menuItems: MenuItem[] = [
     name: "Ketchup de Goiabada",
     description: "Pote individual de 150g",
     price: 5.00,
-    image: "/api/placeholder/300/200?text=Ketchup+Goiabada",
+    image: guavaKetchup,
     category: "sauces",
   },
 
@@ -405,7 +428,7 @@ export const menuItems: MenuItem[] = [
     name: "Refrigerante 2L",
     description: "Coca-Cola ou Guaraná Antártica",
     price: 12.00,
-    image: "/api/placeholder/300/200?text=Refri+2L",
+    image: soda2L,
     category: "drinks",
   },
   {
@@ -413,7 +436,7 @@ export const menuItems: MenuItem[] = [
     name: "Refrigerante 1L",
     description: "Coca-Cola ou Guaraná Antártica",
     price: 9.00,
-    image: "/api/placeholder/300/200?text=Refri+1L",
+    image: soda1L,
     category: "drinks",
   },
   {
@@ -421,7 +444,7 @@ export const menuItems: MenuItem[] = [
     name: "Refrigerante Lata",
     description: "350ml",
     price: 6.00,
-    image: "/api/placeholder/300/200?text=Refrigerante",
+    image: sodaCan,
     category: "drinks",
   },
   {
@@ -429,7 +452,7 @@ export const menuItems: MenuItem[] = [
     name: "Refri Zero Lata",
     description: "350ml",
     price: 6.00,
-    image: "/api/placeholder/300/200?text=Refri+Zero",
+    image: sodaCan,
     category: "drinks",
   },
   {
@@ -437,7 +460,7 @@ export const menuItems: MenuItem[] = [
     name: "Água",
     description: "500ml",
     price: 4.00,
-    image: "/api/placeholder/300/200?text=Água",
+    image: water,
     category: "drinks",
   },
   {
@@ -445,7 +468,7 @@ export const menuItems: MenuItem[] = [
     name: "Heineken",
     description: "Long neck 330ml",
     price: 10.00,
-    image: "/api/placeholder/300/200?text=Heineken",
+    image: heineken,
     category: "drinks",
   },
   {
@@ -453,7 +476,7 @@ export const menuItems: MenuItem[] = [
     name: "Sprite Lemon Fresh",
     description: "510ml",
     price: 6.00,
-    image: "/api/placeholder/300/200?text=Sprite",
+    image: sprite,
     category: "drinks",
   },
   {
@@ -461,7 +484,7 @@ export const menuItems: MenuItem[] = [
     name: "Suco Life",
     description: "Suco laranja integral pasteurizado - 300ml",
     price: 6.00,
-    image: "/api/placeholder/300/200?text=Suco+Natural",
+    image: orangeJuice,
     category: "drinks",
   },
 
@@ -471,7 +494,7 @@ export const menuItems: MenuItem[] = [
     name: "Bolo Fudge",
     description: "Deliciosa fatia de bolo fudge. Se preferir, aquecer de 20 à 40 segundos no micro-ondas para a calda derreter",
     price: 10.00,
-    image: "/api/placeholder/300/200?text=Bolo+Fudge",
+    image: fudgeCake,
     category: "desserts",
   },
   {
@@ -479,7 +502,7 @@ export const menuItems: MenuItem[] = [
     name: "Pudim no Copo",
     description: "Pudim cremoso servido no copo",
     price: 15.00,
-    image: "/api/placeholder/300/200?text=Pudim",
+    image: pudding,
     category: "desserts",
   },
 
@@ -489,7 +512,7 @@ export const menuItems: MenuItem[] = [
     name: "Combo Família",
     description: "1 burguers Kids, 1 burguer salada, 1 burguer da casa, 1 refrigerante 2L (guaraná antártica ou coca-cola)",
     price: 100.00,
-    image: "/api/placeholder/300/200?text=Combo+Família",
+    image: familyCombo,
     category: "combos",
   },
   {
@@ -497,7 +520,7 @@ export const menuItems: MenuItem[] = [
     name: "Combo Casal",
     description: "1 burguer salada, 1 burguer nacho, 1 acompanhamento (batata palito ou nuggets) e 1 refrigerante de 1L",
     price: 87.00,
-    image: "/api/placeholder/300/200?text=Combo+Casal",
+    image: coupleCombo,
     category: "combos",
   },
 ];

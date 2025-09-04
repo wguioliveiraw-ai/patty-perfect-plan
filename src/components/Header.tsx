@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { ShoppingCart, Menu, X, Sun, Moon } from "lucide-react";
+import { ShoppingCart, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useTheme } from "next-themes";
 interface HeaderProps {
   cartItemsCount: number;
   onCartOpen: () => void;
@@ -15,13 +14,6 @@ export const Header = ({
   onBuildBurger
 }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const {
-    theme,
-    setTheme
-  } = useTheme();
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
   return <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
@@ -46,11 +38,6 @@ export const Header = ({
 
           {/* Actions */}
           <div className="flex items-center space-x-3">
-            {/* Theme Toggle */}
-            <Button variant="ghost" size="icon" onClick={toggleTheme} className="hover:bg-secondary/20" aria-label="Alternar tema">
-              {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-            </Button>
-
             {/* Cart */}
             <Button variant="outline" size="icon" onClick={onCartOpen} className="relative btn-outline-yellow" aria-label="Abrir carrinho">
               <ShoppingCart className="h-5 w-5" />
