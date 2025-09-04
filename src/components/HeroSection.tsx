@@ -54,7 +54,7 @@ export const HeroSection = ({
             <div className="glass p-6 rounded-xl text-center">
               <Truck className="w-8 h-8 text-secondary mx-auto mb-3" />
               <h3 className="font-semibold mb-2">Frete Grátis</h3>
-              <p className="text-sm text-gray-300">Pedidos acima de R$ 35</p>
+              <p className="text-sm text-gray-300">Pedidos acima de R$ 60</p>
             </div>
             <div className="glass p-6 rounded-xl text-center">
               <Star className="w-8 h-8 text-secondary mx-auto mb-3" />
