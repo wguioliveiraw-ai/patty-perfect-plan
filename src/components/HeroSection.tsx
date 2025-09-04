@@ -32,7 +32,7 @@ export const HeroSection = ({
           </h1>
 
           {/* Subtitle */}
-          <p className="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl mx-auto">Monte seu lanche perfeito com ingredientes premium e receba no conforto da sua casa!</p>
+          <p className="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl mx-auto">Aqui o hambúrguer é artesanal de verdade, mas o recheio a gente exagera sem dó. Porque fome grande pede sabor gigante.</p>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
