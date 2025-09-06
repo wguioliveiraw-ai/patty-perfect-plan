@@ -551,13 +551,13 @@ export const menuItems: MenuItem[] = [
 
 export const customizationOptions = {
   breads: [
-    { id: "brioche", name: "Pão Brioche", price: 0, image: breadBrioche },
-    { id: "sesame", name: "Pão com Gergelim", price: 0, image: breadSesame },
+    { id: "brioche", name: "Pão Brioche", price: 2, image: breadBrioche },
+    { id: "sesame", name: "Pão com Gergelim", price: 2, image: breadSesame },
     { id: "wholemeal", name: "Pão Integral", price: 2, image: breadWholemeal },
     { id: "black", name: "Pão Preto", price: 3, image: breadBlack },
   ],
   meats: [
-    { id: "beef-120", name: "Hambúrguer 120g", price: 0, image: meatBeef120 },
+    { id: "beef-120", name: "Hambúrguer 120g", price: 3, image: meatBeef120 },
     { id: "beef-180", name: "Hambúrguer 180g", price: 5, image: meatBeef180 },
     { id: "beef-200", name: "Hambúrguer 200g", price: 8, image: meatBeef200 },
     { id: "angus", name: "Angus Premium", price: 12, image: meatAngus },
@@ -565,7 +565,7 @@ export const customizationOptions = {
     { id: "veggie", name: "Hambúrguer Vegetal", price: 2, image: meatVeggie },
   ],
   cheeses: [
-    { id: "cheddar", name: "Cheddar", price: 0, image: cheeseCheddar },
+    { id: "cheddar", name: "Cheddar", price: 3, image: cheeseCheddar },
     { id: "swiss", name: "Queijo Swiss", price: 2, image: cheeseSwiss },
     { id: "gruyere", name: "Gruyère", price: 5, image: cheeseGruyere },
     { id: "vegan", name: "Queijo Vegano", price: 3, image: cheeseVegan },
