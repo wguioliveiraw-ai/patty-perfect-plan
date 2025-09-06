@@ -146,14 +146,19 @@ export const CustomizationModal = ({
             <RadioGroup value={selectedBread} onValueChange={setSelectedBread}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {customizationOptions.breads.map((bread) => (
-                  <div key={bread.id} className="flex items-center space-x-2 border rounded-lg p-3 hover:bg-muted/50">
+                  <div key={bread.id} className="flex items-center space-x-3 border rounded-lg p-3 hover:bg-muted/50">
                     <RadioGroupItem value={bread.id} id={bread.id} />
+                    <img
+                      src={bread.image}
+                      alt={bread.name}
+                      className="w-12 h-12 rounded-lg object-cover"
+                    />
                     <Label htmlFor={bread.id} className="flex-1 cursor-pointer">
-                      <div className="flex justify-between">
+                      <div className="flex justify-between items-center">
                         <span>{bread.name}</span>
-                        {bread.price > 0 && (
-                          <span className="text-secondary">+{formatPrice(bread.price)}</span>
-                        )}
+                        <span className="text-secondary font-semibold">
+                          {bread.price === 0 ? "Grátis" : `+${formatPrice(bread.price)}`}
+                        </span>
                       </div>
                     </Label>
                   </div>
@@ -168,14 +173,19 @@ export const CustomizationModal = ({
             <RadioGroup value={selectedMeat} onValueChange={setSelectedMeat}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {customizationOptions.meats.map((meat) => (
-                  <div key={meat.id} className="flex items-center space-x-2 border rounded-lg p-3 hover:bg-muted/50">
+                  <div key={meat.id} className="flex items-center space-x-3 border rounded-lg p-3 hover:bg-muted/50">
                     <RadioGroupItem value={meat.id} id={meat.id} />
+                    <img
+                      src={meat.image}
+                      alt={meat.name}
+                      className="w-12 h-12 rounded-lg object-cover"
+                    />
                     <Label htmlFor={meat.id} className="flex-1 cursor-pointer">
-                      <div className="flex justify-between">
+                      <div className="flex justify-between items-center">
                         <span>{meat.name}</span>
-                        {meat.price > 0 && (
-                          <span className="text-secondary">+{formatPrice(meat.price)}</span>
-                        )}
+                        <span className="text-secondary font-semibold">
+                          {meat.price === 0 ? "Grátis" : `+${formatPrice(meat.price)}`}
+                        </span>
                       </div>
                     </Label>
                   </div>
@@ -190,14 +200,19 @@ export const CustomizationModal = ({
             <RadioGroup value={selectedCheese} onValueChange={setSelectedCheese}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {customizationOptions.cheeses.map((cheese) => (
-                  <div key={cheese.id} className="flex items-center space-x-2 border rounded-lg p-3 hover:bg-muted/50">
+                  <div key={cheese.id} className="flex items-center space-x-3 border rounded-lg p-3 hover:bg-muted/50">
                     <RadioGroupItem value={cheese.id} id={cheese.id} />
+                    <img
+                      src={cheese.image}
+                      alt={cheese.name}
+                      className="w-12 h-12 rounded-lg object-cover"
+                    />
                     <Label htmlFor={cheese.id} className="flex-1 cursor-pointer">
-                      <div className="flex justify-between">
+                      <div className="flex justify-between items-center">
                         <span>{cheese.name}</span>
-                        {cheese.price > 0 && (
-                          <span className="text-secondary">+{formatPrice(cheese.price)}</span>
-                        )}
+                        <span className="text-secondary font-semibold">
+                          {cheese.price === 0 ? "Grátis" : `+${formatPrice(cheese.price)}`}
+                        </span>
                       </div>
                     </Label>
                   </div>
@@ -211,16 +226,21 @@ export const CustomizationModal = ({
             <h4 className="font-semibold mb-3">Extras (Opcionais)</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {customizationOptions.extras.map((extra) => (
-                <div key={extra.id} className="flex items-center space-x-2 border rounded-lg p-3 hover:bg-muted/50">
+                <div key={extra.id} className="flex items-center space-x-3 border rounded-lg p-3 hover:bg-muted/50">
                   <Checkbox
                     id={extra.id}
                     checked={selectedExtras.includes(extra.id)}
                     onCheckedChange={() => handleExtraToggle(extra.id)}
                   />
+                  <img
+                    src={extra.image}
+                    alt={extra.name}
+                    className="w-12 h-12 rounded-lg object-cover"
+                  />
                   <Label htmlFor={extra.id} className="flex-1 cursor-pointer">
-                    <div className="flex justify-between">
+                    <div className="flex justify-between items-center">
                       <span>{extra.name}</span>
-                      <span className="text-secondary">+{formatPrice(extra.price)}</span>
+                      <span className="text-secondary font-semibold">+{formatPrice(extra.price)}</span>
                     </div>
                   </Label>
                 </div>

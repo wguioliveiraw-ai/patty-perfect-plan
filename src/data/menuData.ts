@@ -41,6 +41,30 @@ import pudding from "@/assets/desserts/pudding.jpg";
 import familyCombo from "@/assets/combos/family-combo.jpg";
 import coupleCombo from "@/assets/combos/couple-combo.jpg";
 
+// Import customization images
+import breadBrioche from "@/assets/customization/bread-brioche.jpg";
+import breadSesame from "@/assets/customization/bread-sesame.jpg";
+import breadWholemeal from "@/assets/customization/bread-wholemeal.jpg";
+import breadBlack from "@/assets/customization/bread-black.jpg";
+
+import meatBeef120 from "@/assets/customization/meat-beef-120.jpg";
+import meatBeef180 from "@/assets/customization/meat-beef-180.jpg";
+import meatBeef200 from "@/assets/customization/meat-beef-200.jpg";
+import meatAngus from "@/assets/customization/meat-angus.jpg";
+import meatChicken from "@/assets/customization/meat-chicken.jpg";
+import meatVeggie from "@/assets/customization/meat-veggie.jpg";
+
+import cheeseCheddar from "@/assets/customization/cheese-cheddar.jpg";
+import cheeseSwiss from "@/assets/customization/cheese-swiss.jpg";
+import cheeseGruyere from "@/assets/customization/cheese-gruyere.jpg";
+import cheeseVegan from "@/assets/customization/cheese-vegan.jpg";
+
+import extraBacon from "@/assets/customization/extra-bacon.jpg";
+import extraEgg from "@/assets/customization/extra-egg.jpg";
+import extraAvocado from "@/assets/customization/extra-avocado.jpg";
+import extraMushroom from "@/assets/customization/extra-mushroom.jpg";
+import extraPickles from "@/assets/customization/extra-pickles.jpg";
+
 export const menuItems: MenuItem[] = [
   // Hambúrgueres Premium 2.0
   {
@@ -527,30 +551,30 @@ export const menuItems: MenuItem[] = [
 
 export const customizationOptions = {
   breads: [
-    { id: "brioche", name: "Pão Brioche", price: 0 },
-    { id: "sesame", name: "Pão com Gergelim", price: 0 },
-    { id: "wholemeal", name: "Pão Integral", price: 2 },
-    { id: "black", name: "Pão Preto", price: 3 },
+    { id: "brioche", name: "Pão Brioche", price: 0, image: breadBrioche },
+    { id: "sesame", name: "Pão com Gergelim", price: 0, image: breadSesame },
+    { id: "wholemeal", name: "Pão Integral", price: 2, image: breadWholemeal },
+    { id: "black", name: "Pão Preto", price: 3, image: breadBlack },
   ],
   meats: [
-    { id: "beef-120", name: "Hambúrguer 120g", price: 0 },
-    { id: "beef-180", name: "Hambúrguer 180g", price: 5 },
-    { id: "beef-200", name: "Hambúrguer 200g", price: 8 },
-    { id: "angus", name: "Angus Premium", price: 12 },
-    { id: "chicken", name: "Frango Grelhado", price: 3 },
-    { id: "veggie", name: "Hambúrguer Vegetal", price: 2 },
+    { id: "beef-120", name: "Hambúrguer 120g", price: 0, image: meatBeef120 },
+    { id: "beef-180", name: "Hambúrguer 180g", price: 5, image: meatBeef180 },
+    { id: "beef-200", name: "Hambúrguer 200g", price: 8, image: meatBeef200 },
+    { id: "angus", name: "Angus Premium", price: 12, image: meatAngus },
+    { id: "chicken", name: "Frango Grelhado", price: 3, image: meatChicken },
+    { id: "veggie", name: "Hambúrguer Vegetal", price: 2, image: meatVeggie },
   ],
   cheeses: [
-    { id: "cheddar", name: "Cheddar", price: 0 },
-    { id: "swiss", name: "Queijo Swiss", price: 2 },
-    { id: "gruyere", name: "Gruyère", price: 5 },
-    { id: "vegan", name: "Queijo Vegano", price: 3 },
+    { id: "cheddar", name: "Cheddar", price: 0, image: cheeseCheddar },
+    { id: "swiss", name: "Queijo Swiss", price: 2, image: cheeseSwiss },
+    { id: "gruyere", name: "Gruyère", price: 5, image: cheeseGruyere },
+    { id: "vegan", name: "Queijo Vegano", price: 3, image: cheeseVegan },
   ],
   extras: [
-    { id: "bacon", name: "Bacon Crocante", price: 6 },
-    { id: "egg", name: "Ovo Frito", price: 3 },
-    { id: "avocado", name: "Abacate", price: 4 },
-    { id: "mushroom", name: "Cogumelos Salteados", price: 5 },
-    { id: "pickles", name: "Pickles", price: 2 },
+    { id: "bacon", name: "Bacon Crocante", price: 6, image: extraBacon },
+    { id: "egg", name: "Ovo Frito", price: 3, image: extraEgg },
+    { id: "avocado", name: "Abacate", price: 4, image: extraAvocado },
+    { id: "mushroom", name: "Cogumelos Salteados", price: 5, image: extraMushroom },
+    { id: "pickles", name: "Pickles", price: 2, image: extraPickles },
   ],
 };
