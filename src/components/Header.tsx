@@ -16,7 +16,7 @@ export const Header = ({
   onBuildBurger
 }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user, signOut } = useAuth();
+  const { user, signOut, isSupabaseConfigured } = useAuth();
 
   const handleLogout = async () => {
     const { error } = await signOut();
@@ -50,8 +50,8 @@ export const Header = ({
 
           {/* Actions */}
           <div className="flex items-center space-x-3">
-            {/* User info */}
-            {user && (
+            {/* User info - only show if Supabase is configured and user exists */}
+            {isSupabaseConfigured && user && (
               <div className="hidden md:flex items-center space-x-2 text-sm text-muted-foreground">
                 <span>Olá, {user.email}</span>
               </div>
@@ -67,10 +67,12 @@ export const Header = ({
               )}
             </Button>
 
-            {/* Logout button */}
-            <Button variant="outline" size="icon" onClick={handleLogout} className="hidden md:flex" aria-label="Fazer logout">
-              <LogOut className="h-4 w-4" />
-            </Button>
+            {/* Logout button - only show if Supabase is configured and user exists */}
+            {isSupabaseConfigured && user && (
+              <Button variant="outline" size="icon" onClick={handleLogout} className="hidden md:flex" aria-label="Fazer logout">
+                <LogOut className="h-4 w-4" />
+              </Button>
+            )}
 
             {/* Mobile Menu Toggle */}
             <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden" aria-label="Abrir menu mobile">
@@ -113,7 +115,7 @@ export const Header = ({
               >
                 Delivery
               </button>
-              {user && (
+              {isSupabaseConfigured && user && (
                 <div className="border-t border-border pt-3 mt-3">
                   <p className="text-sm text-muted-foreground mb-2">Olá, {user.email}</p>
                   <button 

@@ -4,15 +4,58 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useAuth } from '@/contexts/AuthContext'
 import { toast } from 'sonner'
-import { Eye, EyeOff, Phone, Mail } from 'lucide-react'
+import { Eye, EyeOff, Phone, Mail, AlertCircle } from 'lucide-react'
 
 const Auth = () => {
-  const { signIn, signUp } = useAuth()
+  const { signIn, signUp, isSupabaseConfigured } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [loginMethod, setLoginMethod] = useState<'email' | 'phone'>('email')
+
+  // If Supabase is not configured, show configuration message
+  if (!isSupabaseConfigured) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-red-100 dark:from-gray-900 dark:to-gray-800 p-4">
+        <Card className="w-full max-w-md shadow-2xl">
+          <CardHeader className="text-center pb-6">
+            <div className="mx-auto w-16 h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-full flex items-center justify-center mb-4">
+              <span className="text-2xl font-bold text-white">SP</span>
+            </div>
+            <CardTitle className="text-2xl font-bold text-orange-800 dark:text-orange-200">
+              Smash Point
+            </CardTitle>
+          </CardHeader>
+          
+          <CardContent>
+            <Alert>
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                <div className="space-y-2">
+                  <p><strong>Supabase não configurado</strong></p>
+                  <p>Para ativar a autenticação, configure as variáveis de ambiente:</p>
+                  <ul className="list-disc list-inside text-sm space-y-1 mt-2">
+                    <li><code>VITE_SUPABASE_URL</code></li>
+                    <li><code>VITE_SUPABASE_ANON_KEY</code></li>
+                  </ul>
+                  <p className="text-sm mt-2">Enquanto isso, você pode acessar o site diretamente.</p>
+                </div>
+              </AlertDescription>
+            </Alert>
+            
+            <Button 
+              onClick={() => window.location.reload()} 
+              className="w-full mt-4 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700"
+            >
+              Pular Autenticação (Temporário)
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
   // Login form state
   const [loginData, setLoginData] = useState({
