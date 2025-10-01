@@ -16,9 +16,12 @@ interface DeliveryFormProps {
 }
 
 export const DeliveryForm = ({ cartItems, onOrderComplete, onBack }: DeliveryFormProps) => {
+  const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState<"credit" | "debit" | "pix" | "cash">("pix");
+  const [paymentMethod, setPaymentMethod] = useState<"credit" | "debit" | "pix" | "cash">("credit");
+  const [needsChange, setNeedsChange] = useState(false);
+  const [changeAmount, setChangeAmount] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const subtotal = cartItems.reduce((sum, item) => sum + item.totalPrice, 0);
@@ -31,10 +34,19 @@ export const DeliveryForm = ({ cartItems, onOrderComplete, onBack }: DeliveryFor
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!address.trim() || !phone.trim()) {
+    if (!name.trim() || !address.trim() || !phone.trim()) {
       toast({
         title: "Campos obrigatórios",
         description: "Por favor, preencha todos os campos obrigatórios",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (paymentMethod === "cash" && needsChange && !changeAmount.trim()) {
+      toast({
+        title: "Informe o valor do troco",
+        description: "Por favor, informe para quanto precisa de troco",
         variant: "destructive",
       });
       return;
@@ -44,48 +56,52 @@ export const DeliveryForm = ({ cartItems, onOrderComplete, onBack }: DeliveryFor
 
     // Simulate order processing
     setTimeout(() => {
-      // Format order for WhatsApp
-      const finalTotal = paymentMethod === "pix" ? total * 0.95 : total;
+      // Get current date and time
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+      const timeStr = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
       
-      let orderMessage = "🍔 *NOVO PEDIDO - FOOD HOUSE*\n\n";
+      let orderMessage = `➡ *NOVO PEDIDO ${dateStr} ${timeStr}*\n\n`;
       
       // Items
-      orderMessage += "📋 *ITENS DO PEDIDO:*\n";
       cartItems.forEach((item, index) => {
-        orderMessage += `${index + 1}. ${item.name}\n`;
+        orderMessage += `✔ ${item.quantity}x de ${item.name} ${formatPrice(item.totalPrice)}\n`;
+        orderMessage += `${item.description}\n`;
+        
         if (item.customizations && item.customizations.length > 0) {
-          orderMessage += `   Extras: ${item.customizations.map(c => c.name).join(", ")}\n`;
+          orderMessage += `*** Personalizações:\n`;
+          item.customizations.forEach(custom => {
+            orderMessage += `- ${custom.name}\n`;
+          });
         }
-        orderMessage += `   Qtd: ${item.quantity} | ${formatPrice(item.totalPrice)}\n\n`;
+        orderMessage += `\n`;
       });
       
-      // Totals
-      orderMessage += "💰 *VALORES:*\n";
-      orderMessage += `Subtotal: ${formatPrice(subtotal)}\n`;
-      orderMessage += `Taxa de entrega: ${deliveryFee === 0 ? "GRÁTIS" : formatPrice(deliveryFee)}\n`;
-      if (paymentMethod === "pix") {
-        orderMessage += `Desconto PIX (5%): -${formatPrice(total * 0.05)}\n`;
-      }
-      orderMessage += `*Total: ${formatPrice(finalTotal)}*\n\n`;
-      
-      // Delivery Info
-      orderMessage += "📍 *ENDEREÇO DE ENTREGA:*\n";
+      // Customer Info
+      orderMessage += `✅ *CLIENTE*\n`;
+      orderMessage += `${name.trim()}\n`;
       orderMessage += `${address.trim()}\n\n`;
-      
-      orderMessage += "📞 *TELEFONE:*\n";
-      orderMessage += `${phone.trim()}\n\n`;
       
       // Payment Method
       const paymentLabels = {
+        credit: "Crédito",
+        debit: "Débito",
         pix: "PIX",
-        credit: "Cartão de Crédito",
-        debit: "Cartão de Débito",
-        cash: "Dinheiro na Entrega"
+        cash: "Dinheiro"
       };
-      orderMessage += "💳 *FORMA DE PAGAMENTO:*\n";
-      orderMessage += `${paymentLabels[paymentMethod]}\n\n`;
       
-      orderMessage += "⏰ *Tempo estimado: 30-40 minutos*";
+      // Totals
+      orderMessage += `💲 *TOTAL ${formatPrice(total)}*\n`;
+      orderMessage += `Pedido: ${formatPrice(subtotal)}   Tx Entrega: ${formatPrice(deliveryFee)}\n`;
+      orderMessage += `Forma PGTO: ${paymentLabels[paymentMethod]}\n`;
+      
+      if (paymentMethod === "cash" && needsChange) {
+        orderMessage += `Troco para: ${changeAmount}\n`;
+      }
+      
+      orderMessage += `\n${name.trim()} favor aguardar a resposta confirmando o pedido.\n`;
+      orderMessage += `Telefone: ${phone.trim()}\n\n`;
+      orderMessage += `*ENVIAR PEDIDO OK ✅*`;
       
       // WhatsApp URL
       const whatsappNumber = "5514981637609"; // (14) 98163-7609 in international format
@@ -142,6 +158,18 @@ export const DeliveryForm = ({ cartItems, onOrderComplete, onBack }: DeliveryFor
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
+                    <Label htmlFor="name">Nome completo *</Label>
+                    <Input
+                      id="name"
+                      placeholder="Seu nome completo"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
+                      className="mt-1"
+                    />
+                  </div>
+
+                  <div>
                     <Label htmlFor="address">Endereço completo *</Label>
                     <Input
                       id="address"
@@ -157,7 +185,7 @@ export const DeliveryForm = ({ cartItems, onOrderComplete, onBack }: DeliveryFor
                     <Label htmlFor="phone">Telefone/WhatsApp *</Label>
                     <Input
                       id="phone"
-                      placeholder="(11) 99999-9999"
+                      placeholder="(14) 99999-9999"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       required
@@ -176,16 +204,14 @@ export const DeliveryForm = ({ cartItems, onOrderComplete, onBack }: DeliveryFor
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <RadioGroup value={paymentMethod} onValueChange={(value: any) => setPaymentMethod(value)}>
+                <RadioGroup value={paymentMethod} onValueChange={(value: any) => {
+                  setPaymentMethod(value);
+                  if (value !== 'cash') {
+                    setNeedsChange(false);
+                    setChangeAmount("");
+                  }
+                }}>
                   <div className="space-y-3">
-                    <div className="flex items-center space-x-2 border rounded-lg p-3 hover:bg-muted/50">
-                      <RadioGroupItem value="pix" id="pix" />
-                      <Label htmlFor="pix" className="flex-1 cursor-pointer flex justify-between">
-                        <span>PIX</span>
-                        <span className="text-green-600 text-sm">Desconto de 5%</span>
-                      </Label>
-                    </div>
-                    
                     <div className="flex items-center space-x-2 border rounded-lg p-3 hover:bg-muted/50">
                       <RadioGroupItem value="credit" id="credit" />
                       <Label htmlFor="credit" className="flex-1 cursor-pointer">
@@ -199,12 +225,54 @@ export const DeliveryForm = ({ cartItems, onOrderComplete, onBack }: DeliveryFor
                         Cartão de Débito
                       </Label>
                     </div>
-                    
+
                     <div className="flex items-center space-x-2 border rounded-lg p-3 hover:bg-muted/50">
-                      <RadioGroupItem value="cash" id="cash" />
-                      <Label htmlFor="cash" className="flex-1 cursor-pointer">
-                        Dinheiro na Entrega
+                      <RadioGroupItem value="pix" id="pix" />
+                      <Label htmlFor="pix" className="flex-1 cursor-pointer">
+                        PIX
                       </Label>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <div className="flex items-center space-x-2 border rounded-lg p-3 hover:bg-muted/50">
+                        <RadioGroupItem value="cash" id="cash" />
+                        <Label htmlFor="cash" className="flex-1 cursor-pointer">
+                          Dinheiro
+                        </Label>
+                      </div>
+                      
+                      {paymentMethod === "cash" && (
+                        <div className="ml-8 space-y-3 p-3 bg-muted/50 rounded-lg">
+                          <div className="flex items-center space-x-2">
+                            <input
+                              type="checkbox"
+                              id="needsChange"
+                              checked={needsChange}
+                              onChange={(e) => {
+                                setNeedsChange(e.target.checked);
+                                if (!e.target.checked) setChangeAmount("");
+                              }}
+                              className="w-4 h-4"
+                            />
+                            <Label htmlFor="needsChange" className="cursor-pointer">
+                              Precisa de troco?
+                            </Label>
+                          </div>
+                          
+                          {needsChange && (
+                            <div>
+                              <Label htmlFor="changeAmount" className="text-sm">Troco para quanto? *</Label>
+                              <Input
+                                id="changeAmount"
+                                placeholder="Ex: R$ 50,00"
+                                value={changeAmount}
+                                onChange={(e) => setChangeAmount(e.target.value)}
+                                className="mt-1"
+                              />
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </RadioGroup>
@@ -253,19 +321,12 @@ export const DeliveryForm = ({ cartItems, onOrderComplete, onBack }: DeliveryFor
                     </span>
                   </div>
                   
-                  {paymentMethod === "pix" && (
-                    <div className="flex justify-between text-green-600">
-                      <span>Desconto PIX (5%)</span>
-                      <span>-{formatPrice(total * 0.05)}</span>
-                    </div>
-                  )}
-                  
                   <Separator />
                   
                   <div className="flex justify-between font-bold text-lg">
                     <span>Total</span>
                     <span className="text-secondary">
-                      {formatPrice(paymentMethod === "pix" ? total * 0.95 : total)}
+                      {formatPrice(total)}
                     </span>
                   </div>
                 </div>
@@ -279,7 +340,7 @@ export const DeliveryForm = ({ cartItems, onOrderComplete, onBack }: DeliveryFor
 
                 <Button
                   onClick={handleSubmit}
-                  disabled={isSubmitting || !address.trim() || !phone.trim()}
+                  disabled={isSubmitting || !name.trim() || !address.trim() || !phone.trim()}
                   className="w-full btn-hero text-lg py-6 mt-6"
                 >
                   {isSubmitting ? (

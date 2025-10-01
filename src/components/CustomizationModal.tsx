@@ -23,7 +23,6 @@ export const CustomizationModal = ({
   onClose, 
   onAddToCart 
 }: CustomizationModalProps) => {
-  const [selectedBread, setSelectedBread] = useState<string>("");
   const [selectedMeats, setSelectedMeats] = useState<string[]>([]);
   const [selectedCheeses, setSelectedCheeses] = useState<string[]>([]);
   const [selectedExtras, setSelectedExtras] = useState<string[]>([]);
@@ -33,10 +32,6 @@ export const CustomizationModal = ({
 
   const calculateTotalPrice = () => {
     let total = 0; // Remove base item price
-    
-    // Add bread price
-    const bread = customizationOptions.breads.find(b => b.id === selectedBread);
-    if (bread) total += bread.price;
     
     // Add meats price
     selectedMeats.forEach(meatId => {
@@ -89,9 +84,6 @@ export const CustomizationModal = ({
     const customizations: Customization[] = [];
     
     // Add selected customizations
-    const bread = customizationOptions.breads.find(b => b.id === selectedBread);
-    if (bread) customizations.push({ ...bread, type: 'ingredient' });
-    
     selectedMeats.forEach(meatId => {
       const meat = customizationOptions.meats.find(m => m.id === meatId);
       if (meat) customizations.push({ ...meat, type: 'ingredient' });
@@ -110,7 +102,6 @@ export const CustomizationModal = ({
     onAddToCart(item, customizations, quantity);
     
     // Reset form
-    setSelectedBread("");
     setSelectedMeats([]);
     setSelectedCheeses([]);
     setSelectedExtras([]);
@@ -126,7 +117,6 @@ export const CustomizationModal = ({
 
   const handleClose = () => {
     // Reset form when closing
-    setSelectedBread("");
     setSelectedMeats([]);
     setSelectedCheeses([]);
     setSelectedExtras([]);
@@ -160,33 +150,6 @@ export const CustomizationModal = ({
                 Preço personalizado baseado na sua escolha
               </p>
             </div>
-          </div>
-
-          {/* Bread Selection */}
-          <div>
-            <h4 className="font-semibold mb-3">Escolha o Pão</h4>
-            <RadioGroup value={selectedBread} onValueChange={setSelectedBread}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {customizationOptions.breads.map((bread) => (
-                  <div key={bread.id} className="flex items-center space-x-3 border rounded-lg p-3 hover:bg-muted/50">
-                    <RadioGroupItem value={bread.id} id={bread.id} />
-                    <img
-                      src={bread.image}
-                      alt={bread.name}
-                      className="w-12 h-12 rounded-lg object-cover"
-                    />
-                    <Label htmlFor={bread.id} className="flex-1 cursor-pointer">
-                      <div className="flex justify-between items-center">
-                        <span>{bread.name}</span>
-                        <span className="text-secondary font-semibold">
-                          {bread.price === 0 ? "Grátis" : `+${formatPrice(bread.price)}`}
-                        </span>
-                      </div>
-                    </Label>
-                  </div>
-                ))}
-              </div>
-            </RadioGroup>
           </div>
 
           {/* Meat Selection */}
@@ -309,7 +272,7 @@ export const CustomizationModal = ({
             <Button
               onClick={handleAddToCart}
               className="w-full btn-hero text-lg py-6"
-              disabled={!selectedBread || selectedMeats.length === 0 || selectedCheeses.length === 0}
+              disabled={selectedMeats.length === 0 || selectedCheeses.length === 0}
             >
               Adicionar ao Carrinho
             </Button>
