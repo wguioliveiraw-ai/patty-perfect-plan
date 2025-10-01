@@ -91,8 +91,8 @@ export const DeliveryForm = ({ cartItems, onOrderComplete, onBack }: DeliveryFor
       };
       
       // Totals
-      orderMessage += `💲 *TOTAL ${formatPrice(total)}*\n`;
       orderMessage += `Pedido: ${formatPrice(subtotal)}   Tx Entrega: ${formatPrice(deliveryFee)}\n`;
+      orderMessage += `💲 *TOTAL ${formatPrice(total)}*\n`;
       orderMessage += `Forma PGTO: ${paymentLabels[paymentMethod]}\n`;
       
       if (paymentMethod === "cash" && needsChange) {
