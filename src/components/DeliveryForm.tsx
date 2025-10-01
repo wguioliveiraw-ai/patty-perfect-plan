@@ -65,13 +65,12 @@ export const DeliveryForm = ({ cartItems, onOrderComplete, onBack }: DeliveryFor
       
       // Items
       cartItems.forEach((item, index) => {
-        orderMessage += `✔ ${item.quantity}x de ${item.name} ${formatPrice(item.totalPrice)}\n`;
-        orderMessage += `${item.description}\n`;
+        orderMessage += `✔ ${item.quantity}x de ${item.name} ${formatPrice(item.price)}\n`;
         
         if (item.customizations && item.customizations.length > 0) {
           orderMessage += `*** Personalizações:\n`;
           item.customizations.forEach(custom => {
-            orderMessage += `- ${custom.name}\n`;
+            orderMessage += `- ${custom.name} ${formatPrice(custom.price)}\n`;
           });
         }
         orderMessage += `\n`;
@@ -80,7 +79,8 @@ export const DeliveryForm = ({ cartItems, onOrderComplete, onBack }: DeliveryFor
       // Customer Info
       orderMessage += `✅ *CLIENTE*\n`;
       orderMessage += `${name.trim()}\n`;
-      orderMessage += `${address.trim()}\n\n`;
+      orderMessage += `${address.trim()}\n`;
+      orderMessage += `Telefone: ${phone.trim()}\n\n`;
       
       // Payment Method
       const paymentLabels = {
@@ -99,9 +99,7 @@ export const DeliveryForm = ({ cartItems, onOrderComplete, onBack }: DeliveryFor
         orderMessage += `Troco para: ${changeAmount}\n`;
       }
       
-      orderMessage += `\n${name.trim()} favor aguardar a resposta confirmando o pedido.\n`;
-      orderMessage += `Telefone: ${phone.trim()}\n\n`;
-      orderMessage += `*ENVIAR PEDIDO OK ✅*`;
+      orderMessage += `\n${name.trim()} favor aguardar a resposta confirmando o pedido.`;
       
       // WhatsApp URL
       const whatsappNumber = "5514981637609"; // (14) 98163-7609 in international format
