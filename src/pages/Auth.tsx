@@ -11,7 +11,11 @@ import { toast } from 'sonner'
 import { Eye, EyeOff, Phone, Mail, Gift, Star, Percent, Clock } from 'lucide-react'
 import { FaGoogle, FaFacebook } from 'react-icons/fa'
 
-const Auth = () => {
+interface AuthProps {
+  onContinue?: () => void;
+}
+
+const Auth = ({ onContinue }: AuthProps) => {
   const navigate = useNavigate()
   const { signIn, signUp, signInWithPhone, signInWithGoogle, signInWithFacebook, isSupabaseConfigured } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
@@ -220,7 +224,10 @@ const Auth = () => {
   }
 
   const handleContinueWithoutLogin = () => {
-    navigate('/')
+    if (onContinue) {
+      onContinue();
+    }
+    navigate('/');
   }
 
   return (
