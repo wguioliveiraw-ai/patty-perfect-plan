@@ -9,6 +9,9 @@ interface AuthContextType {
   loading: boolean
   signUp: (email: string, password: string, phone?: string) => Promise<{ error: any }>
   signIn: (email: string, password: string) => Promise<{ error: any }>
+  signInWithPhone: (phone: string) => Promise<{ error: any }>
+  signInWithGoogle: () => Promise<{ error: any }>
+  signInWithFacebook: () => Promise<{ error: any }>
   signOut: () => Promise<{ error: any }>
   isSupabaseConfigured: boolean
 }
@@ -98,6 +101,57 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }
 
+  const signInWithPhone = async (phone: string) => {
+    if (!isSupabaseConfigured) {
+      return { error: { message: 'Supabase não está configurado. Configure as variáveis de ambiente.' } }
+    }
+    
+    try {
+      const { data, error } = await supabase.auth.signInWithOtp({
+        phone: phone,
+      })
+      return { error }
+    } catch (error) {
+      return { error }
+    }
+  }
+
+  const signInWithGoogle = async () => {
+    if (!isSupabaseConfigured) {
+      return { error: { message: 'Supabase não está configurado. Configure as variáveis de ambiente.' } }
+    }
+    
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin
+        }
+      })
+      return { error }
+    } catch (error) {
+      return { error }
+    }
+  }
+
+  const signInWithFacebook = async () => {
+    if (!isSupabaseConfigured) {
+      return { error: { message: 'Supabase não está configurado. Configure as variáveis de ambiente.' } }
+    }
+    
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'facebook',
+        options: {
+          redirectTo: window.location.origin
+        }
+      })
+      return { error }
+    } catch (error) {
+      return { error }
+    }
+  }
+
   const signOut = async () => {
     if (!isSupabaseConfigured) {
       return { error: null }
@@ -117,6 +171,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     loading,
     signUp,
     signIn,
+    signInWithPhone,
+    signInWithGoogle,
+    signInWithFacebook,
     signOut,
     isSupabaseConfigured,
   }

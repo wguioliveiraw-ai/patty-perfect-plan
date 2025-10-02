@@ -1,61 +1,22 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Separator } from "@/components/ui/separator"
 import { useAuth } from '@/contexts/AuthContext'
 import { toast } from 'sonner'
-import { Eye, EyeOff, Phone, Mail, AlertCircle } from 'lucide-react'
+import { Eye, EyeOff, Phone, Mail, Gift, Star, Percent, Clock } from 'lucide-react'
+import { FaGoogle, FaFacebook } from 'react-icons/fa'
 
 const Auth = () => {
-  const { signIn, signUp, isSupabaseConfigured } = useAuth()
+  const navigate = useNavigate()
+  const { signIn, signUp, signInWithPhone, signInWithGoogle, signInWithFacebook, isSupabaseConfigured } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [loginMethod, setLoginMethod] = useState<'email' | 'phone'>('email')
-
-  // If Supabase is not configured, show configuration message
-  if (!isSupabaseConfigured) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-red-100 dark:from-gray-900 dark:to-gray-800 p-4">
-        <Card className="w-full max-w-md shadow-2xl">
-          <CardHeader className="text-center pb-6">
-            <div className="mx-auto w-16 h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-full flex items-center justify-center mb-4">
-              <span className="text-2xl font-bold text-white">SP</span>
-            </div>
-            <CardTitle className="text-2xl font-bold text-orange-800 dark:text-orange-200">
-              Smash Point
-            </CardTitle>
-          </CardHeader>
-          
-          <CardContent>
-            <Alert>
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                <div className="space-y-2">
-                  <p><strong>Supabase não configurado</strong></p>
-                  <p>Para ativar a autenticação, configure as variáveis de ambiente:</p>
-                  <ul className="list-disc list-inside text-sm space-y-1 mt-2">
-                    <li><code>VITE_SUPABASE_URL</code></li>
-                    <li><code>VITE_SUPABASE_ANON_KEY</code></li>
-                  </ul>
-                  <p className="text-sm mt-2">Enquanto isso, você pode acessar o site diretamente.</p>
-                </div>
-              </AlertDescription>
-            </Alert>
-            
-            <Button 
-              onClick={() => window.location.reload()} 
-              className="w-full mt-4 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700"
-            >
-              Pular Autenticação (Temporário)
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
 
   // Login form state
   const [loginData, setLoginData] = useState({
@@ -70,6 +31,9 @@ const Auth = () => {
     password: '',
     confirmPassword: ''
   })
+
+  // Phone OTP state
+  const [phoneNumber, setPhoneNumber] = useState('')
 
   const validatePassword = (password: string): string[] => {
     const errors: string[] = []
@@ -99,8 +63,9 @@ const Auth = () => {
   }
 
   const validatePhone = (phone: string): boolean => {
-    const phoneRegex = /^\(\d{2}\)\s\d{4,5}-\d{4}$/
-    return phoneRegex.test(phone)
+    const phoneRegex = /^\+?[1-9]\d{10,14}$/
+    const numbersOnly = phone.replace(/\D/g, '')
+    return phoneRegex.test(numbersOnly) && numbersOnly.length >= 11
   }
 
   const formatPhone = (value: string) => {
@@ -132,6 +97,7 @@ const Auth = () => {
         toast.error('Erro ao fazer login: ' + error.message)
       } else {
         toast.success('Login realizado com sucesso!')
+        navigate('/')
       }
     } catch (error) {
       toast.error('Erro inesperado')
@@ -171,7 +137,7 @@ const Auth = () => {
       }
 
       if (loginMethod === 'phone' && !validatePhone(signupData.phone)) {
-        toast.error('Telefone deve estar no formato (XX) XXXXX-XXXX')
+        toast.error('Telefone inválido. Use o formato (XX) XXXXX-XXXX')
         return
       }
 
@@ -188,6 +154,7 @@ const Auth = () => {
         toast.error('Erro ao criar conta: ' + error.message)
       } else {
         toast.success('Conta criada com sucesso!')
+        navigate('/')
       }
     } catch (error) {
       toast.error('Erro inesperado')
@@ -196,73 +163,233 @@ const Auth = () => {
     }
   }
 
+  const handlePhoneLogin = async () => {
+    if (!phoneNumber) {
+      toast.error('Digite seu número de telefone')
+      return
+    }
+
+    if (!validatePhone(phoneNumber)) {
+      toast.error('Número de telefone inválido')
+      return
+    }
+
+    setIsLoading(true)
+    try {
+      const phoneWithCountryCode = '+55' + phoneNumber.replace(/\D/g, '')
+      const { error } = await signInWithPhone(phoneWithCountryCode)
+      
+      if (error) {
+        toast.error('Erro ao enviar código: ' + error.message)
+      } else {
+        toast.success('Código enviado para seu telefone!')
+      }
+    } catch (error) {
+      toast.error('Erro inesperado')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleGoogleLogin = async () => {
+    setIsLoading(true)
+    try {
+      const { error } = await signInWithGoogle()
+      if (error) {
+        toast.error('Erro ao fazer login com Google: ' + error.message)
+      }
+    } catch (error) {
+      toast.error('Erro inesperado')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleFacebookLogin = async () => {
+    setIsLoading(true)
+    try {
+      const { error } = await signInWithFacebook()
+      if (error) {
+        toast.error('Erro ao fazer login com Facebook: ' + error.message)
+      }
+    } catch (error) {
+      toast.error('Erro inesperado')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleContinueWithoutLogin = () => {
+    navigate('/')
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-red-100 dark:from-gray-900 dark:to-gray-800 p-4">
-      <Card className="w-full max-w-md shadow-2xl">
+      <Card className="w-full max-w-lg shadow-2xl">
         <CardHeader className="text-center pb-6">
           <div className="mx-auto w-16 h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-full flex items-center justify-center mb-4">
-            <span className="text-2xl font-bold text-white">SP</span>
+            <span className="text-2xl font-bold text-white">FH</span>
           </div>
           <CardTitle className="text-2xl font-bold text-orange-800 dark:text-orange-200">
-            Smash Point
+            Food House
           </CardTitle>
           <CardDescription className="text-gray-600 dark:text-gray-400">
-            Entre ou crie sua conta para continuar
+            Entre para aproveitar benefícios exclusivos
           </CardDescription>
         </CardHeader>
         
-        <CardContent>
+        <CardContent className="space-y-6">
+          {/* Benefits Section */}
+          <div className="bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-950/20 dark:to-yellow-950/20 rounded-lg p-4 space-y-3">
+            <h3 className="font-semibold text-orange-900 dark:text-orange-200 flex items-center gap-2">
+              <Gift className="h-5 w-5" />
+              Vantagens de ter uma conta:
+            </h3>
+            <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+              <li className="flex items-center gap-2">
+                <Star className="h-4 w-4 text-orange-500" />
+                Acumule pontos a cada pedido
+              </li>
+              <li className="flex items-center gap-2">
+                <Percent className="h-4 w-4 text-orange-500" />
+                Descontos e promoções exclusivas
+              </li>
+              <li className="flex items-center gap-2">
+                <Clock className="h-4 w-4 text-orange-500" />
+                Histórico de pedidos e favoritos salvos
+              </li>
+            </ul>
+          </div>
+
+          {/* Social Login Buttons */}
+          {isSupabaseConfigured && (
+            <div className="space-y-3">
+              <Button
+                onClick={handleGoogleLogin}
+                disabled={isLoading}
+                variant="outline"
+                className="w-full flex items-center justify-center gap-2 h-11"
+              >
+                <FaGoogle className="h-5 w-5 text-red-500" />
+                Continuar com Google
+              </Button>
+
+              <Button
+                onClick={handleFacebookLogin}
+                disabled={isLoading}
+                variant="outline"
+                className="w-full flex items-center justify-center gap-2 h-11"
+              >
+                <FaFacebook className="h-5 w-5 text-blue-600" />
+                Continuar com Facebook
+              </Button>
+            </div>
+          )}
+
+          <div className="relative">
+            <Separator />
+            <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-2 text-xs text-muted-foreground">
+              ou
+            </span>
+          </div>
+
+          {/* Traditional Login/Signup */}
           <Tabs defaultValue="login" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger value="login">Entrar</TabsTrigger>
               <TabsTrigger value="signup">Criar Conta</TabsTrigger>
             </TabsList>
             
-            <TabsContent value="login">
-              <form onSubmit={handleLogin} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="login-email">E-mail</Label>
-                  <Input
-                    id="login-email"
-                    type="email"
-                    placeholder="seu@email.com"
-                    value={loginData.email}
-                    onChange={(e) => setLoginData(prev => ({ ...prev, email: e.target.value }))}
-                    required
-                  />
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="login-password">Senha</Label>
-                  <div className="relative">
+            <TabsContent value="login" className="space-y-4">
+              <div className="flex gap-2 mb-4">
+                <Button
+                  type="button"
+                  variant={loginMethod === 'email' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setLoginMethod('email')}
+                  className="flex-1"
+                >
+                  <Mail className="h-4 w-4 mr-2" />
+                  E-mail
+                </Button>
+                <Button
+                  type="button"
+                  variant={loginMethod === 'phone' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setLoginMethod('phone')}
+                  className="flex-1"
+                >
+                  <Phone className="h-4 w-4 mr-2" />
+                  Telefone
+                </Button>
+              </div>
+
+              {loginMethod === 'email' ? (
+                <form onSubmit={handleLogin} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="login-email">E-mail</Label>
                     <Input
-                      id="login-password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Sua senha"
-                      value={loginData.password}
-                      onChange={(e) => setLoginData(prev => ({ ...prev, password: e.target.value }))}
+                      id="login-email"
+                      type="email"
+                      placeholder="seu@email.com"
+                      value={loginData.email}
+                      onChange={(e) => setLoginData(prev => ({ ...prev, email: e.target.value }))}
                       required
                     />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </Button>
                   </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="login-password">Senha</Label>
+                    <div className="relative">
+                      <Input
+                        id="login-password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Sua senha"
+                        value={loginData.password}
+                        onChange={(e) => setLoginData(prev => ({ ...prev, password: e.target.value }))}
+                        required
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? 'Entrando...' : 'Entrar'}
+                  </Button>
+                </form>
+              ) : (
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="phone-number">Número de Telefone</Label>
+                    <Input
+                      id="phone-number"
+                      type="tel"
+                      placeholder="(XX) XXXXX-XXXX"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(formatPhone(e.target.value))}
+                    />
+                  </div>
+                  <Button 
+                    onClick={handlePhoneLogin}
+                    className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? 'Enviando...' : 'Enviar Código'}
+                  </Button>
                 </div>
-                
-                <Button 
-                  type="submit" 
-                  className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700"
-                  disabled={isLoading}
-                >
-                  {isLoading ? 'Entrando...' : 'Entrar'}
-                </Button>
-              </form>
+              )}
             </TabsContent>
             
             <TabsContent value="signup">
@@ -366,6 +493,17 @@ const Auth = () => {
               </div>
             </TabsContent>
           </Tabs>
+
+          <Separator />
+
+          {/* Continue Without Login */}
+          <Button
+            onClick={handleContinueWithoutLogin}
+            variant="ghost"
+            className="w-full"
+          >
+            Continuar sem fazer login
+          </Button>
         </CardContent>
       </Card>
     </div>

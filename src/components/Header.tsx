@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { ShoppingCart, Menu, X, LogOut } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { ShoppingCart, Menu, X, LogOut, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -16,11 +17,17 @@ export const Header = ({
   onBuildBurger
 }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
   const {
     user,
     signOut,
     isSupabaseConfigured
   } = useAuth();
+  
+  const handleLogin = () => {
+    navigate('/auth');
+  };
+  
   const handleLogout = async () => {
     const {
       error
@@ -68,10 +75,19 @@ export const Header = ({
                 </span>}
             </Button>
 
-            {/* Logout button - only show if Supabase is configured and user exists */}
-            {isSupabaseConfigured && user && <Button variant="outline" size="icon" onClick={handleLogout} className="hidden md:flex" aria-label="Fazer logout">
-                <LogOut className="h-4 w-4" />
-              </Button>}
+            {/* Login/Logout button */}
+            {isSupabaseConfigured && (
+              user ? (
+                <Button variant="outline" size="icon" onClick={handleLogout} className="hidden md:flex" aria-label="Fazer logout">
+                  <LogOut className="h-4 w-4" />
+                </Button>
+              ) : (
+                <Button variant="outline" onClick={handleLogin} className="hidden md:flex" aria-label="Fazer login">
+                  <LogIn className="h-4 w-4 mr-2" />
+                  Entrar
+                </Button>
+              )
+            )}
 
             {/* Mobile Menu Toggle */}
             <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden" aria-label="Abrir menu mobile">
@@ -101,16 +117,30 @@ export const Header = ({
           }} aria-label="Abrir carrinho">
                 Delivery
               </button>
-              {isSupabaseConfigured && user && <div className="border-t border-border pt-3 mt-3">
-                  <p className="text-sm text-muted-foreground mb-2">Olá, {user.email}</p>
-                  <button className="text-left text-red-600 hover:text-red-700 transition-colors font-medium py-2 flex items-center gap-2" onClick={() => {
-              handleLogout();
-              setIsMenuOpen(false);
-            }} aria-label="Fazer logout">
-                    <LogOut className="h-4 w-4" />
-                    Sair
-                  </button>
-                </div>}
+              {isSupabaseConfigured && (
+                <div className="border-t border-border pt-3 mt-3">
+                  {user ? (
+                    <>
+                      <p className="text-sm text-muted-foreground mb-2">Olá, {user.email}</p>
+                      <button className="text-left text-red-600 hover:text-red-700 transition-colors font-medium py-2 flex items-center gap-2" onClick={() => {
+                        handleLogout();
+                        setIsMenuOpen(false);
+                      }} aria-label="Fazer logout">
+                        <LogOut className="h-4 w-4" />
+                        Sair
+                      </button>
+                    </>
+                  ) : (
+                    <button className="text-left text-orange-600 hover:text-orange-700 transition-colors font-medium py-2 flex items-center gap-2" onClick={() => {
+                      handleLogin();
+                      setIsMenuOpen(false);
+                    }} aria-label="Fazer login">
+                      <LogIn className="h-4 w-4" />
+                      Entrar
+                    </button>
+                  )}
+                </div>
+              )}
             </nav>
           </div>}
       </div>
