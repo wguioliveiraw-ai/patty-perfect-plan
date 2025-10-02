@@ -169,3 +169,16 @@ All colors MUST be HSL. Black (#000000) and Yellow (#FFFF00) theme.
     background: var(--gradient-hero);
   }
 }
+
+/* Hide Lovable badges and references */
+a[href*="lovable.dev"], 
+iframe[src*="lovable.dev"], 
+div[style*="Edit with Lovable"], 
+.lovable-badge {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  z-index: -9999 !important;
+}
