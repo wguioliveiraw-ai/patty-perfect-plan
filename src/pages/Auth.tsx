@@ -231,38 +231,38 @@ const Auth = ({ onContinue }: AuthProps) => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-red-100 dark:from-gray-900 dark:to-gray-800 p-4">
-      <Card className="w-full max-w-lg shadow-2xl">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <Card className="w-full max-w-lg shadow-2xl border-2 border-secondary/20">
         <CardHeader className="text-center pb-6">
-          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-full flex items-center justify-center mb-4">
-            <span className="text-2xl font-bold text-white">FH</span>
+          <div className="mx-auto w-16 h-16 bg-secondary rounded-full flex items-center justify-center mb-4">
+            <span className="text-2xl font-bold text-secondary-foreground">FH</span>
           </div>
-          <CardTitle className="text-2xl font-bold text-orange-800 dark:text-orange-200">
+          <CardTitle className="text-2xl font-bold text-foreground">
             Food House
           </CardTitle>
-          <CardDescription className="text-gray-600 dark:text-gray-400">
+          <CardDescription className="text-muted-foreground">
             Entre para aproveitar benefícios exclusivos
           </CardDescription>
         </CardHeader>
         
         <CardContent className="space-y-6">
           {/* Benefits Section */}
-          <div className="bg-gradient-to-r from-orange-50 to-yellow-50 dark:from-orange-950/20 dark:to-yellow-950/20 rounded-lg p-4 space-y-3">
-            <h3 className="font-semibold text-orange-900 dark:text-orange-200 flex items-center gap-2">
-              <Gift className="h-5 w-5" />
+          <div className="bg-secondary/10 border border-secondary/20 rounded-lg p-4 space-y-3">
+            <h3 className="font-semibold text-foreground flex items-center gap-2">
+              <Gift className="h-5 w-5 text-secondary" />
               Vantagens de ter uma conta:
             </h3>
-            <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+            <ul className="space-y-2 text-sm text-muted-foreground">
               <li className="flex items-center gap-2">
-                <Star className="h-4 w-4 text-orange-500" />
+                <Star className="h-4 w-4 text-secondary" />
                 Acumule pontos a cada pedido
               </li>
               <li className="flex items-center gap-2">
-                <Percent className="h-4 w-4 text-orange-500" />
+                <Percent className="h-4 w-4 text-secondary" />
                 Descontos e promoções exclusivas
               </li>
               <li className="flex items-center gap-2">
-                <Clock className="h-4 w-4 text-orange-500" />
+                <Clock className="h-4 w-4 text-secondary" />
                 Histórico de pedidos e favoritos salvos
               </li>
             </ul>
@@ -370,7 +370,7 @@ const Auth = ({ onContinue }: AuthProps) => {
                   
                   <Button 
                     type="submit" 
-                    className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700"
+                    className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90"
                     disabled={isLoading}
                   >
                     {isLoading ? 'Entrando...' : 'Entrar'}
@@ -390,7 +390,7 @@ const Auth = ({ onContinue }: AuthProps) => {
                   </div>
                   <Button 
                     onClick={handlePhoneLogin}
-                    className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700"
+                    className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90"
                     disabled={isLoading}
                   >
                     {isLoading ? 'Enviando...' : 'Enviar Código'}
@@ -491,7 +491,7 @@ const Auth = ({ onContinue }: AuthProps) => {
                   
                   <Button 
                     type="submit" 
-                    className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700"
+                    className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90"
                     disabled={isLoading}
                   >
                     {isLoading ? 'Criando...' : 'Criar Conta'}

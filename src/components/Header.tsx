@@ -78,11 +78,11 @@ export const Header = ({
             {/* Login/Logout button */}
             {isSupabaseConfigured && (
               user ? (
-                <Button variant="outline" size="icon" onClick={handleLogout} className="hidden md:flex" aria-label="Fazer logout">
+                <Button variant="outline" size="icon" onClick={handleLogout} className="hidden md:flex border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground" aria-label="Fazer logout">
                   <LogOut className="h-4 w-4" />
                 </Button>
               ) : (
-                <Button variant="outline" onClick={handleLogin} className="hidden md:flex" aria-label="Fazer login">
+                <Button variant="outline" onClick={handleLogin} className="hidden md:flex border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground" aria-label="Fazer login">
                   <LogIn className="h-4 w-4 mr-2" />
                   Entrar
                 </Button>
@@ -131,7 +131,7 @@ export const Header = ({
                       </button>
                     </>
                   ) : (
-                    <button className="text-left text-orange-600 hover:text-orange-700 transition-colors font-medium py-2 flex items-center gap-2" onClick={() => {
+                    <button className="text-left text-secondary hover:text-secondary/80 transition-colors font-medium py-2 flex items-center gap-2" onClick={() => {
                       handleLogin();
                       setIsMenuOpen(false);
                     }} aria-label="Fazer login">
